@@ -10,8 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controller\" />
-    <Folder Include="Model\" />
+    <Folder Include="Banco_de_Dados\" />
   </ItemGroup>
 
 </Project>
