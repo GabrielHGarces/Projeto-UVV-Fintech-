@@ -11,9 +11,6 @@ using System.Windows.Shapes;
 
 namespace Projeto_UVV_Fintech.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
 
@@ -34,7 +31,7 @@ namespace Projeto_UVV_Fintech.Views
 
             // Calcula a nova posição X e Y para centralizar
             this.Left = (screenWidth / 2) - (windowWidth / 2);
-            this.Top = (screenHeight / 2) - (windowHeight / 2);
+            this.Top = (screenHeight / 2) - (windowHeight / 2) -25;
         }
 
 
