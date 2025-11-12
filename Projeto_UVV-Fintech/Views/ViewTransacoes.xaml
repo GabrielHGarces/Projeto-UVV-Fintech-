@@ -5,11 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Projeto_UVV_Fintech.Views"
         mc:Ignorable="d"
-        Title="ViewTransacoes" Height="535" Width="800"
+        Title="ViewTransacoes" Height="634" Width="800"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
 
-    <Grid>
+    <Window.Resources>
+        <Style TargetType="TextBox" >
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="DatePicker" >
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="0,0,0,-6">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="75" Margin="0,10,0,0">
             <Button Content="Gerenciador de Transações" Height="43" Margin="15" Width="345" Cursor="Hand" Click="Button_Click"/>
         </StackPanel>
@@ -18,7 +27,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
                 <Grid Width="166">
                     <Label Content="ID Transação" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox x:Name="IdInput" Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" TextChanged="IdInput_TextChanged"/>
+                    <TextBox VerticalContentAlignment="Center" x:Name="IdInput" Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" TextChanged="IdInput_TextChanged"/>
                 </Grid>
                 <Grid Width="166">
                     <Label Content="Tipo" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
@@ -33,11 +42,11 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
                 <Grid Width="166">
                     <Label Content="Conta Remetente" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/>
+                    <TextBox x:Name="RemetenteInput" VerticalContentAlignment="Center" Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" TextChanged="RemetenteInput_TextChanged"/>
                 </Grid>
                 <Grid Width="166">
                     <Label Content="Conta Destinatário" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/>
+                    <TextBox x:Name="DestinatarioInput" VerticalContentAlignment="Center" Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" TextChanged="DestinatarioInput_TextChanged"/>
                 </Grid>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
@@ -46,7 +55,7 @@
                 </Grid>
                 <Grid Width="166">
                     <Label Content="Valor" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox Text="R$ 0,00" Height="21" Margin="5,5,5,5" x:Name="NumericTextBox" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" LostFocus="NumericTextBox_LostFocus" GotFocus="NumericTextBox_GotFocus"/>
+                    <TextBox VerticalContentAlignment="Center" Text="" Height="21" Margin="5,5,5,5" x:Name="NumericTextBox" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" LostFocus="NumericTextBox_LostFocus" GotFocus="NumericTextBox_GotFocus"/>
                 </Grid>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
@@ -54,8 +63,8 @@
                     <Button x:Name="DataMaiorQue" Content="Maior Que" Margin="5,5,5,5" Height="21" Cursor="Hand" Click="DataMaiorQue_Click"/>
                 </Grid>
                 <Grid Width="166">
-                    <Label Content="Data e Hora" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox Text="" Height="21" Margin="5,5,5,5"/>
+                    <Label Content="Data" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
+                    <DatePicker x:Name="DataInput" SelectedDate="{Binding DataSelecionada, Mode=TwoWay}" Margin="5" SelectedDateChanged="DataInput_SelectedDateChanged" />
                 </Grid>
             </StackPanel>
 
@@ -63,19 +72,48 @@
         </StackPanel>
 
 
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Height="246" Width="756" Margin="0,259,0,0">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Height="330" Width="756" Margin="0,259,0,0">
             <Button x:Name="SearchButton" Content="Pesquisar" Height="43"  Cursor="Hand" Background="White" Click="SearchButton_Click" Width="187" HorizontalAlignment="Right"/>
-            <DataGrid x:Name="TabelaPessoas"
+            <DataGrid x:Name="TabelaTransacoes"
               AutoGenerateColumns="False"
               HeadersVisibility="All"
               CanUserAddRows="False"
               
-              IsReadOnly="True" Height="178">
+              IsReadOnly="True" Height="287">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.CellStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
-                    <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="*" />
-                    <DataGridTextColumn Header="Idade" Binding="{Binding Idade}" Width="*" />
-                    <DataGridTextColumn Header="Profissão" Binding="{Binding Profissao}" Width="2*" />
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="0.5*" />
+                    <DataGridTextColumn Header="Valor" Binding="{Binding Valor, StringFormat={}{0:C}, ConverterCulture=pt-BR}" Width="1.5*" />
+                    <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="1.5*" />
+                    <DataGridTextColumn Header="Data e Hora" Binding="{Binding DataEHora, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="2*" />
+                    <DataGridTemplateColumn Header="Conta Remetente" Width="2*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding ContaRemetente}"
+                                    Padding="0"
+                                    Foreground="Black"
+                                    HorizontalAlignment="Stretch"
+                                    Cursor="Hand"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    
+                    <DataGridTemplateColumn Header="Conta Destinatário" Width="2*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding ContaDestinatario}"
+                                    Padding="0"
+                                    Foreground="Black"
+                                    HorizontalAlignment="Stretch"
+                                    Cursor="Hand"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

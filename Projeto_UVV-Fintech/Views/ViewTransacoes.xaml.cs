@@ -22,58 +22,50 @@ namespace Projeto_UVV_Fintech.Views
         public bool valorMaiorQue = false;
         public bool dataMaiorQue = true;
         public int? ID;
-        decimal valor = 0;
+        public double valor = 0;
         public string tipoTransacao = "";
-        public List<Pessoa> pessoas;
+        public List<Transacao> transacoes;
+        public int? contaRemetente = null;
+        public int? contaDestinatario = null;
+        public DateTime? dataSelecionada = null;
 
         public ViewTransacoes()
         {
             InitializeComponent();
 
-            pessoas = new List<Pessoa>
+            transacoes = new List<Transacao>
             {
-                new Pessoa { Id = 1, Nome = "Ana", Idade = 25, Profissao = "Engenheira" },
-                new Pessoa { Id = 2, Nome = "Carlos", Idade = 30, Profissao = "Professor" },
-                new Pessoa { Id = 3, Nome = "Beatriz", Idade = 28, Profissao = "Designer" },
-                new Pessoa { Id = 4, Nome = "Diego", Idade = 40, Profissao = "Médico" },
-                new Pessoa { Id = 1, Nome = "Ana", Idade = 25, Profissao = "Engenheira" },
-                new Pessoa { Id = 2, Nome = "Carlos", Idade = 30, Profissao = "Professor" },
-                new Pessoa { Id = 3, Nome = "Beatriz", Idade = 28, Profissao = "Designer" },
-                new Pessoa { Id = 4, Nome = "Diego", Idade = 40, Profissao = "Médico" },
-                new Pessoa { Id = 1, Nome = "Ana", Idade = 25, Profissao = "Engenheira" },
-                new Pessoa { Id = 2, Nome = "Carlos", Idade = 30, Profissao = "Professor" },
-                new Pessoa { Id = 3, Nome = "Beatriz", Idade = 28, Profissao = "Designer" },
-                new Pessoa { Id = 4, Nome = "Diego", Idade = 40, Profissao = "Médico" },
-                new Pessoa { Id = 1, Nome = "Ana", Idade = 25, Profissao = "Engenheira" },
-                new Pessoa { Id = 2, Nome = "Carlos", Idade = 30, Profissao = "Professor" },
-                new Pessoa { Id = 3, Nome = "Beatriz", Idade = 28, Profissao = "Designer" },
-                new Pessoa { Id = 4, Nome = "Diego", Idade = 40, Profissao = "Médico" },
+                new Transacao { Id = 1, Valor = 500.5, Tipo = "Saque", DataEHora = DateTime.Now, ContaRemetente = 888888888, ContaDestinatario = 999999999 },
+                new Transacao { Id = 2, Valor = 600.87, Tipo = "Saque", DataEHora = new(2025, 11, 12), ContaRemetente = 999999999, ContaDestinatario = 888888888 },
+                new Transacao { Id = 3, Valor = 700, Tipo = "Saque", DataEHora = new(2025, 11, 13), ContaRemetente = 111111111, ContaDestinatario = 999999999 },
+                new Transacao { Id = 4, Valor = 800, Tipo = "Transferência", DataEHora = new(2025, 11, 14), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
+                new Transacao { Id = 1, Valor = 900, Tipo = "Transferência", DataEHora = new(2025, 11, 15), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
+                new Transacao { Id = 1, Valor = 1000, Tipo = "Transferência", DataEHora = new(2025, 11, 16), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
+                new Transacao { Id = 1, Valor = 500, Tipo = "Depósito", DataEHora = new(2025, 11, 11), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
+                new Transacao { Id = 1, Valor = 500, Tipo = "Depósito", DataEHora = new(2025, 11, 11), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
+                new Transacao { Id = 1, Valor = 500, Tipo = "Depósito", DataEHora = new(2025, 11, 11), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
+                new Transacao { Id = 1, Valor = 500, Tipo = "Depósito", DataEHora = new(2025, 11, 11), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
             };
 
 
             // Atribui os dados à tabela
-            TabelaPessoas.ItemsSource = pessoas;
+            TabelaTransacoes.ItemsSource = transacoes;
 
         }
 
-        public class Pessoa
+        public class Transacao
         {
             public int Id { get; set; }
-            public string Nome { get; set; }
-            public int Idade { get; set; }
-            public string Profissao { get; set; }
+            public double Valor { get; set; }
+            public string Tipo { get; set; } = "";
+            public DateTime DataEHora { get; set; }
+            public int ContaRemetente { get; set; }
+            public int ContaDestinatario { get; set; }
         }
 
 
         private void NumericTextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
-            // Usa uma expressão regular para verificar se o caractere é um dígito (0-9)
-            // Se quiser permitir decimais, você precisaria de uma lógica mais complexa aqui.
-            //if (!System.Text.RegularExpressions.Regex.IsMatch(e.Text, "[0-9]"))
-            //{
-            //    e.Handled = true; // Impede que o caractere seja inserido
-            //}
-
             // Obtém o TextBox que disparou o evento
             TextBox textBox = sender as TextBox;
 
@@ -168,9 +160,9 @@ namespace Projeto_UVV_Fintech.Views
 
         private void NumericTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (decimal.TryParse(NumericTextBox.Text, out valor))
+            if (double.TryParse(NumericTextBox.Text, out valor))
             {
-                valor = decimal.Parse(NumericTextBox.Text);
+                valor = double.Parse(NumericTextBox.Text);
             }
             else
             {
@@ -182,7 +174,12 @@ namespace Projeto_UVV_Fintech.Views
 
             // Exibe o resultado: R$ 123.456,78
             Console.WriteLine(valorFormatado);
+
             NumericTextBox.Text = valorFormatado;
+            if (valor == 0)
+            {
+                NumericTextBox.Text = "";
+            }
         }
 
         private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -199,11 +196,16 @@ namespace Projeto_UVV_Fintech.Views
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             //string termo = CampoPesquisa.Text.ToLower();
-            var filtrado = pessoas
-                .Where(p => (p.Idade == ID || ID == null))
+            var filtrado = transacoes
+                .Where(p => (p.Id == ID || ID == null) &&
+                (p.Tipo.Contains(tipoTransacao) || tipoTransacao == "Todos" || tipoTransacao == null) &&
+                (p.ContaRemetente.ToString().Contains(contaRemetente.ToString()) || contaRemetente == null) &&
+                (p.ContaDestinatario.ToString().Contains(contaDestinatario.ToString()) || contaDestinatario == null) &&
+                ((valorMaiorQue? p.Valor >= valor : p.Valor <= valor) || valor == 0) &&
+                ((dataMaiorQue ? p.DataEHora >= dataSelecionada : p.DataEHora <= dataSelecionada) || dataSelecionada == null))
                 .ToList();
 
-            TabelaPessoas.ItemsSource = filtrado;
+            TabelaTransacoes.ItemsSource = filtrado;
         }
 
         private void IdInput_TextChanged(object sender, TextChangedEventArgs e)
@@ -223,6 +225,49 @@ namespace Projeto_UVV_Fintech.Views
             {
                 ID = -1;
             }
+        }
+
+        private void RemetenteInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (RemetenteInput.Text != "")
+            {
+                try
+                {
+                    contaRemetente = int.Parse(RemetenteInput.Text);
+                }
+                catch (Exception)
+                {
+                    contaRemetente = null;
+                }
+            }
+            else
+            {
+                contaRemetente = null;
+            }
+        }
+
+        private void DestinatarioInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (DestinatarioInput.Text != "")
+            {
+                try
+                {
+                    contaDestinatario = int.Parse(DestinatarioInput.Text);
+                }
+                catch (Exception)
+                {
+                    contaDestinatario = null;
+                }
+            }
+            else
+            {
+                contaDestinatario = null;
+            }
+        }
+
+        private void DataInput_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            dataSelecionada = DataInput.SelectedDate;
         }
     }
 }
