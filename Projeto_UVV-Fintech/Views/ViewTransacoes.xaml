@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Projeto_UVV_Fintech.Views"
         mc:Ignorable="d"
-        Title="ViewTransacoes" Height="450" Width="800"
+        Title="ViewTransacoes" Height="535" Width="800"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
 
@@ -18,21 +18,26 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
                 <Grid Width="166">
                     <Label Content="ID Transação" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox Text="" Height="21" Margin="5,5,5,5"/>
+                    <TextBox x:Name="IdInput" Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting" TextChanged="IdInput_TextChanged"/>
                 </Grid>
                 <Grid Width="166">
                     <Label Content="Tipo" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox Text="" Height="21" Margin="5,5,5,5"/>
+                    <ComboBox x:Name="TipoOpcoes" HorizontalAlignment="Center" VerticalAlignment="Center" Width="154" SelectionChanged="Type_SelectionChanged">
+                        <ComboBoxItem Content="Todos" IsSelected="True"/>
+                        <ComboBoxItem Content="Depósito"/>
+                        <ComboBoxItem Content="Saque"/>
+                        <ComboBoxItem Content="Transferência"/>
+                    </ComboBox>
                 </Grid>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
                 <Grid Width="166">
                     <Label Content="Conta Remetente" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox Text="" Height="21" Margin="5,5,5,5"/>
+                    <TextBox Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/>
                 </Grid>
                 <Grid Width="166">
                     <Label Content="Conta Destinatário" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
-                    <TextBox Text="" Height="21" Margin="5,5,5,5"/>
+                    <TextBox Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/>
                 </Grid>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
@@ -55,6 +60,24 @@
             </StackPanel>
 
 
+        </StackPanel>
+
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Height="246" Width="756" Margin="0,259,0,0">
+            <Button x:Name="SearchButton" Content="Pesquisar" Height="43"  Cursor="Hand" Background="White" Click="SearchButton_Click" Width="187" HorizontalAlignment="Right"/>
+            <DataGrid x:Name="TabelaPessoas"
+              AutoGenerateColumns="False"
+              HeadersVisibility="All"
+              CanUserAddRows="False"
+              
+              IsReadOnly="True" Height="178">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
+                    <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="*" />
+                    <DataGridTextColumn Header="Idade" Binding="{Binding Idade}" Width="*" />
+                    <DataGridTextColumn Header="Profissão" Binding="{Binding Profissao}" Width="2*" />
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
 
 

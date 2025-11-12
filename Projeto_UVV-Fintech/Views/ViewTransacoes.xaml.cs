@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Globalization;
+using System.Linq;
 
 
 namespace Projeto_UVV_Fintech.Views
@@ -20,12 +21,49 @@ namespace Projeto_UVV_Fintech.Views
     {
         public bool valorMaiorQue = false;
         public bool dataMaiorQue = true;
+        public int? ID;
         decimal valor = 0;
+        public string tipoTransacao = "";
+        public List<Pessoa> pessoas;
 
         public ViewTransacoes()
         {
             InitializeComponent();
+
+            pessoas = new List<Pessoa>
+            {
+                new Pessoa { Id = 1, Nome = "Ana", Idade = 25, Profissao = "Engenheira" },
+                new Pessoa { Id = 2, Nome = "Carlos", Idade = 30, Profissao = "Professor" },
+                new Pessoa { Id = 3, Nome = "Beatriz", Idade = 28, Profissao = "Designer" },
+                new Pessoa { Id = 4, Nome = "Diego", Idade = 40, Profissao = "Médico" },
+                new Pessoa { Id = 1, Nome = "Ana", Idade = 25, Profissao = "Engenheira" },
+                new Pessoa { Id = 2, Nome = "Carlos", Idade = 30, Profissao = "Professor" },
+                new Pessoa { Id = 3, Nome = "Beatriz", Idade = 28, Profissao = "Designer" },
+                new Pessoa { Id = 4, Nome = "Diego", Idade = 40, Profissao = "Médico" },
+                new Pessoa { Id = 1, Nome = "Ana", Idade = 25, Profissao = "Engenheira" },
+                new Pessoa { Id = 2, Nome = "Carlos", Idade = 30, Profissao = "Professor" },
+                new Pessoa { Id = 3, Nome = "Beatriz", Idade = 28, Profissao = "Designer" },
+                new Pessoa { Id = 4, Nome = "Diego", Idade = 40, Profissao = "Médico" },
+                new Pessoa { Id = 1, Nome = "Ana", Idade = 25, Profissao = "Engenheira" },
+                new Pessoa { Id = 2, Nome = "Carlos", Idade = 30, Profissao = "Professor" },
+                new Pessoa { Id = 3, Nome = "Beatriz", Idade = 28, Profissao = "Designer" },
+                new Pessoa { Id = 4, Nome = "Diego", Idade = 40, Profissao = "Médico" },
+            };
+
+
+            // Atribui os dados à tabela
+            TabelaPessoas.ItemsSource = pessoas;
+
         }
+
+        public class Pessoa
+        {
+            public int Id { get; set; }
+            public string Nome { get; set; }
+            public int Idade { get; set; }
+            public string Profissao { get; set; }
+        }
+
 
         private void NumericTextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
@@ -145,6 +183,46 @@ namespace Projeto_UVV_Fintech.Views
             // Exibe o resultado: R$ 123.456,78
             Console.WriteLine(valorFormatado);
             NumericTextBox.Text = valorFormatado;
+        }
+
+        private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem selectedItem = (ComboBoxItem)TipoOpcoes.SelectedItem;
+            if (selectedItem != null)
+            {
+                // Salva o conteúdo (texto) na variável privada
+                tipoTransacao = selectedItem.Content.ToString();
+            }
+
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            //string termo = CampoPesquisa.Text.ToLower();
+            var filtrado = pessoas
+                .Where(p => (p.Idade == ID || ID == null))
+                .ToList();
+
+            TabelaPessoas.ItemsSource = filtrado;
+        }
+
+        private void IdInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (IdInput.Text == "")
+                {
+                    ID = null;
+                }
+                else
+                {
+                    ID = int.Parse(IdInput.Text);
+                }
+            }
+            catch (Exception)
+            {
+                ID = -1;
+            }
         }
     }
 }
