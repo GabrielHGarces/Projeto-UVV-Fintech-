@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace Projeto_UVV_Fintech.Views
 {
-    /// <summary>
-    /// Lógica interna para ContaTransacaoDialog.xaml
-    /// </summary>
     public partial class ContaTransacaoDialog : Window
     {
         public ContaTransacaoDialog()
@@ -33,6 +30,59 @@ namespace Projeto_UVV_Fintech.Views
         private void SomenteLetras(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = !Regex.IsMatch(e.Text, @"^[\p{L}\s']+$");
+        }
+
+        private void NumericTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            bool isDigit = Char.IsDigit(e.Text, 0);
+
+            string decimalSeparator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
+
+            bool isSeparator = e.Text == ",";
+
+            if (isDigit)
+            {
+                e.Handled = false;
+            }
+            else if (isSeparator)
+            {
+                if (textBox.Text.Contains(","))
+                {
+                    e.Handled = true;
+                }
+                else
+                {
+                    e.Handled = false;
+                }
+            }
+            else
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void NumericTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(typeof(string)))
+            {
+                string text = (string)e.DataObject.GetData(typeof(string));
+                if (!System.Text.RegularExpressions.Regex.IsMatch(text, "[0-9]+"))
+                {
+                    e.CancelCommand(); // Cancela o comando de colar
+                }
+            }
+            else
+            {
+                e.CancelCommand(); // Cancela se não for texto
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }

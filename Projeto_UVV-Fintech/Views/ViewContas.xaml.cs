@@ -230,17 +230,17 @@ namespace Projeto_UVV_Fintech.Views
         {
             this.Opacity = 0.5;
 
-            var dialog = new ContaDialog { Owner = this };
+            var dialog = new ContaTransacaoDialog { Owner = this };
             bool? resultado = dialog.ShowDialog();
 
             this.Opacity = 1;
 
             if (resultado == true)
             {
-                int IdCliente = dialog.IdCliente;
-                string tipoConta = dialog.tipoConta;
+                //int IdCliente = dialog.IdCliente;
+                //string tipoConta = dialog.tipoConta;
 
-                MessageBox.Show($"Conta criada:\nId Cliente: {IdCliente}\nTipo Conta: {tipoConta}");
+                //MessageBox.Show($"Conta criada:\nId Cliente: {IdCliente}\nTipo Conta: {tipoConta}");
             }
         }
     }
