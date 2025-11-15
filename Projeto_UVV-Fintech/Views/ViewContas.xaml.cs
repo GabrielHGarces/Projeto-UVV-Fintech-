@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static Projeto_UVV_Fintech.Views.ViewClientes;
 
 namespace Projeto_UVV_Fintech.Views
 {
@@ -36,17 +37,55 @@ namespace Projeto_UVV_Fintech.Views
 
             contas = new List<Conta>
             {
-                new Conta { Agencia = 1234, NumConta = 56789, Tipo = "CC", DataDeAdesao = DateTime.Now.AddMonths(-2), Saldo = 182763, Nome = "Irineu"},
-                new Conta { Agencia = 2345, NumConta = 67890, Tipo = "CP", DataDeAdesao = DateTime.Now.AddMonths(-1), Saldo = 182763, Nome = "Irineu" },
-                new Conta { Agencia = 3456, NumConta = 78901, Tipo = "CP", DataDeAdesao = DateTime.Now, Saldo = 182763, Nome = "Irineu" },
+                new Conta { IdCliente = 1, Agencia = 1234, NumConta = 56789, Tipo = "CC", DataDeAdesao = DateTime.Now.AddMonths(-2), Saldo = 182763, Nome = "Irineu"},
+                new Conta { IdCliente = 2, Agencia = 2345, NumConta = 67890, Tipo = "CP", DataDeAdesao = DateTime.Now.AddMonths(-1), Saldo = 182763, Nome = "Irineu" },
+                new Conta { IdCliente = 3, Agencia = 3456, NumConta = 78901, Tipo = "CP", DataDeAdesao = DateTime.Now, Saldo = 182763, Nome = "Irineu" },
             };
 
 
             TabelaContas.ItemsSource = contas;
         }
 
+        public ViewContas(int nConta)
+        {
+            InitializeComponent();
+
+            contas = new List<Conta>
+            {
+                new Conta { IdCliente = 1, Agencia = 1234, NumConta = 56789, Tipo = "CC", DataDeAdesao = DateTime.Now.AddMonths(-2), Saldo = 182763, Nome = "Irineu"},
+                new Conta { IdCliente = 2,  Agencia = 2345, NumConta = 67890, Tipo = "CP", DataDeAdesao = DateTime.Now.AddMonths(-1), Saldo = 182763, Nome = "Irineu" },
+                new Conta { IdCliente = 3,  Agencia = 3456, NumConta = 78901, Tipo = "CP", DataDeAdesao = DateTime.Now, Saldo = 182763, Nome = "Irineu" },
+            };
+
+            NConta.Text = nConta.ToString();
+            //numeroConta = nConta;
+
+
+            TabelaContas.ItemsSource = contas;
+            PerformSearch();
+        }
+        public ViewContas(int nConta, string a)
+        {
+            InitializeComponent();
+
+            contas = new List<Conta>
+            {
+                new Conta { IdCliente = 1, Agencia = 1234, NumConta = 56789, Tipo = "CC", DataDeAdesao = DateTime.Now.AddMonths(-2), Saldo = 182763, Nome = "Irineu"},
+                new Conta { IdCliente = 2,  Agencia = 2345, NumConta = 67890, Tipo = "CP", DataDeAdesao = DateTime.Now.AddMonths(-1), Saldo = 182763, Nome = "Irineu" },
+                new Conta { IdCliente = 3,  Agencia = 3456, NumConta = 78901, Tipo = "CP", DataDeAdesao = DateTime.Now, Saldo = 182763, Nome = "Irineu" },
+            };
+
+            ClienteID.Text = nConta.ToString();
+            //numeroConta = nConta;
+
+
+            TabelaContas.ItemsSource = contas;
+            PerformSearch();
+        }
+
         public class Conta
         {
+            public int IdCliente { get; set; }
             public int NumConta { get; set; }
             public int Agencia { get; set; }
             public string Tipo { get; set; } = "";
@@ -176,16 +215,74 @@ namespace Projeto_UVV_Fintech.Views
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var filtrado = contas
-                .Where(p => (p.NumConta.ToString().Contains(numeroConta.ToString()) || numeroConta == null) &&
-                (p.Tipo.Contains(tipoConta) || tipoConta == "Todos" || tipoConta == null) &&
-                (p.Agencia.ToString().Contains(numeroAgencia.ToString())  || numeroAgencia == null) &&
-                (p.Nome.Contains(nomeTitular) || nomeTitular == null) &&
-                ((saldoMaiorQue ? p.Saldo >= saldo : p.Saldo <= saldo) || saldo == 0) &&
-                ((dataMaiorQue ? p.DataDeAdesao >= dataSelecionada : p.DataDeAdesao <= dataSelecionada) || dataSelecionada == null))
-                .ToList();
+            PerformSearch();
+        }
 
-            TabelaContas.ItemsSource = filtrado;
+        private void PerformSearch()
+        {
+            if (contas == null)
+            {
+                TabelaContas.ItemsSource = null;
+                return;
+            }
+
+            var query = contas.AsEnumerable();
+
+            // Filtrar por ID do cliente (se informado)
+            if (!string.IsNullOrWhiteSpace(ClienteID.Text))
+            {
+                string buscaID = ClienteID.Text;
+                query = query.Where(p => p.IdCliente.ToString().Contains(buscaID));
+            }
+
+            // Filtrar por número da conta (se informado)
+            if (numeroConta.HasValue)
+            {
+                string buscaConta = numeroConta.Value.ToString();
+                query = query.Where(p => p.NumConta.ToString().Contains(buscaConta));
+            }
+
+            // Filtrar por número da agência (se informado)
+            if (numeroAgencia.HasValue)
+            {
+                string buscaAgencia = numeroAgencia.Value.ToString();
+                query = query.Where(p => p.Agencia.ToString().Contains(buscaAgencia));
+            }
+
+            // Filtrar por tipo de conta (se não for "Todos" e não for nulo/vazio)
+            if (!string.IsNullOrWhiteSpace(tipoConta) && !string.Equals(tipoConta, "Todos", StringComparison.OrdinalIgnoreCase))
+            {
+                query = query.Where(p => !string.IsNullOrWhiteSpace(p.Tipo) &&
+                                     p.Tipo.IndexOf(tipoConta, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+
+            // Filtrar por nome do titular (se informado)
+            if (!string.IsNullOrWhiteSpace(nomeTitular))
+            {
+                query = query.Where(p => !string.IsNullOrWhiteSpace(p.Nome) &&
+                                     p.Nome.IndexOf(nomeTitular, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+
+            // Filtrar por saldo (se diferente de 0)
+            if (saldo != 0)
+            {
+                if (saldoMaiorQue)
+                    query = query.Where(p => p.Saldo >= saldo);
+                else
+                    query = query.Where(p => p.Saldo <= saldo);
+            }
+
+            // Filtrar por data (se selecionada) comparando apenas a parte da data
+            if (dataSelecionada.HasValue)
+            {
+                DateTime ds = dataSelecionada.Value.Date;
+                if (dataMaiorQue)
+                    query = query.Where(p => p.DataDeAdesao.Date >= ds);
+                else
+                    query = query.Where(p => p.DataDeAdesao.Date <= ds);
+            }
+
+            TabelaContas.ItemsSource = query.ToList();
         }
 
         private void DataMaiorQue_Click(object sender, RoutedEventArgs e)
@@ -228,11 +325,22 @@ namespace Projeto_UVV_Fintech.Views
 
         private void NameTableButton_Click(object sender, RoutedEventArgs e)
         {
+            // 1. Converte o 'sender' (que é o botão clicado) para um objeto Button.
+            Button button = sender as Button;
+            if (button == null) return;
+
+            // 2. Obtém o DataContext do botão, que é o objeto 'Conta' da linha clicada.
+            Conta contaSelecionada = button.DataContext as Conta;
+            if (contaSelecionada == null) return;
+
+            // 3. Pega a informação que você quer passar (neste caso, o nome do cliente).
+            int idCliente = contaSelecionada.IdCliente;
+
+            // 4. Abre a janela ViewClientes, passando o nome do cliente para o construtor.
             this.Hide();
-            var window = new ViewClientes { Owner = this };
+            var window = new ViewClientes(idCliente) { Owner = this };
             window.ShowDialog();
             this.Close();
-
         }
 
         private void NumeroContaButton_Click(object sender, RoutedEventArgs e)

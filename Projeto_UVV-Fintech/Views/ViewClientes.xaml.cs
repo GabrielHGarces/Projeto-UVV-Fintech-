@@ -36,7 +36,7 @@ namespace Projeto_UVV_Fintech.Views
 
             clientes = new List<Cliente>
             {
-                new Cliente { Id = 1, Nome = "João Silva", NumeroDeContas = 2, Telefone = "11987654321", Cep = "01001-000", DataDeAdesao = new DateTime(2022, 5, 10) },
+                new Cliente { Id = 1, Nome = "Irineu", NumeroDeContas = 2, Telefone = "11987654321", Cep = "01001-000", DataDeAdesao = new DateTime(2022, 5, 10) },
                 new Cliente { Id = 2, Nome = "Maria Oliveira", NumeroDeContas = 1, Telefone = "21987654321", Cep = "20010-000", DataDeAdesao = new DateTime(2023, 3, 15) },
                 new Cliente { Id = 3, Nome = "Carlos Pereira", NumeroDeContas = 3, Telefone = "31987654321", Cep = "30010-000", DataDeAdesao = new DateTime(2021, 8, 20) },
                 new Cliente { Id = 4, Nome = "Ana Souza", NumeroDeContas = 2, Telefone = "41987654321", Cep = "40010-000", DataDeAdesao = new DateTime(2020, 11, 5) },
@@ -45,6 +45,27 @@ namespace Projeto_UVV_Fintech.Views
             };
 
             TabelaClientes.ItemsSource = clientes;
+        }
+
+        public ViewClientes(int IdCliente)
+        {
+            InitializeComponent();
+
+            clientes = new List<Cliente>
+            {
+                new Cliente { Id = 1, Nome = "Irineu", NumeroDeContas = 2, Telefone = "11987654321", Cep = "01001-000", DataDeAdesao = new DateTime(2022, 5, 10) },
+                new Cliente { Id = 2, Nome = "Maria Oliveira", NumeroDeContas = 1, Telefone = "21987654321", Cep = "20010-000", DataDeAdesao = new DateTime(2023, 3, 15) },
+                new Cliente { Id = 3, Nome = "Carlos Pereira", NumeroDeContas = 3, Telefone = "31987654321", Cep = "30010-000", DataDeAdesao = new DateTime(2021, 8, 20) },
+                new Cliente { Id = 4, Nome = "Ana Souza", NumeroDeContas = 2, Telefone = "41987654321", Cep = "40010-000", DataDeAdesao = new DateTime(2020, 11, 5) },
+                new Cliente { Id = 5, Nome = "Pedro Lima", NumeroDeContas = 1, Telefone = "51987654321", Cep = "50010-000", DataDeAdesao = new DateTime(2024, 1, 25) },
+                new Cliente { Id = 6, Nome = "Luiza Fernandes", NumeroDeContas = 4, Telefone = "61987654321", Cep = "60010-000", DataDeAdesao = new DateTime(2019, 7, 30) },
+            };
+
+            TabelaClientes.ItemsSource = clientes;
+
+            ClientID = IdCliente;
+            IdInput.Text = IdCliente.ToString();
+            SearchButton_Click_1(null, null);
         }
 
         public class Cliente
@@ -202,12 +223,21 @@ namespace Projeto_UVV_Fintech.Views
 
             TabelaClientes.ItemsSource = filtrado;
         }
+
+        private void NumeroDeContas_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button == null) return;
+
+            Cliente contaSelecionada = button.DataContext as Cliente;
+            if (contaSelecionada == null) return;
+
+            int idCliente = contaSelecionada.Id;
+
+            this.Hide();
+            var window = new ViewContas(idCliente, ";-;") { Owner = this };
+            window.ShowDialog();
+            this.Close();
+        }
     }
 }
-//public int? ClientID { get; set; }
-//public double? Telefone { get; set; }
-//public double? Cep { get; set; }
-//public string? ClientName { get; set; }
-//public int? NumeroContas { get; set; }
-//public DateTime? DataAdesao { get; set; } = null;
-//public bool MaiorQueData { get; set; } = true;

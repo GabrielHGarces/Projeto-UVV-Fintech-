@@ -35,9 +35,9 @@ namespace Projeto_UVV_Fintech.Views
 
             transacoes = new List<Transacao>
             {
-                new Transacao { Id = 1, Valor = 500.5, Tipo = "Saque", DataEHora = DateTime.Now, ContaRemetente = 888888888, ContaDestinatario = 999999999 },
-                new Transacao { Id = 2, Valor = 600.87, Tipo = "Saque", DataEHora = new(2025, 11, 12), ContaRemetente = 999999999, ContaDestinatario = 888888888 },
-                new Transacao { Id = 3, Valor = 700, Tipo = "Saque", DataEHora = new(2025, 11, 13), ContaRemetente = 111111111, ContaDestinatario = 999999999 },
+                new Transacao { Id = 1, Valor = 500.5, Tipo = "Saque", DataEHora = DateTime.Now, ContaRemetente = 56789, ContaDestinatario = 67890 },
+                new Transacao { Id = 2, Valor = 600.87, Tipo = "Saque", DataEHora = new(2025, 11, 12), ContaRemetente = 67890, ContaDestinatario = 56789 },
+                new Transacao { Id = 3, Valor = 700, Tipo = "Saque", DataEHora = new(2025, 11, 13), ContaRemetente = 67890, ContaDestinatario = 999999999 },
                 new Transacao { Id = 4, Valor = 800, Tipo = "Transferência", DataEHora = new(2025, 11, 14), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
                 new Transacao { Id = 1, Valor = 900, Tipo = "Transferência", DataEHora = new(2025, 11, 15), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
                 new Transacao { Id = 1, Valor = 1000, Tipo = "Transferência", DataEHora = new(2025, 11, 16), ContaRemetente = 999999999, ContaDestinatario = 999999999 },
@@ -267,6 +267,38 @@ namespace Projeto_UVV_Fintech.Views
         private void DataInput_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             dataSelecionada = DataInput.SelectedDate;
+        }
+
+        private void ContaRemetente_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button == null) return;
+
+            Transacao contaSelecionada = button.DataContext as Transacao;
+            if (contaSelecionada == null) return;
+
+            int Remetente = contaSelecionada.ContaRemetente;
+
+            this.Hide();
+            var window = new ViewContas(Remetente) { Owner = this };
+            window.ShowDialog();
+            this.Close();
+        }
+
+        private void ContaDestinatario_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button == null) return;
+
+            Transacao contaSelecionada = button.DataContext as Transacao;
+            if (contaSelecionada == null) return;
+
+            int Destinatario = contaSelecionada.ContaDestinatario;
+
+            this.Hide();
+            var window = new ViewContas(Destinatario) { Owner = this };
+            window.ShowDialog();
+            this.Close();
         }
     }
 }

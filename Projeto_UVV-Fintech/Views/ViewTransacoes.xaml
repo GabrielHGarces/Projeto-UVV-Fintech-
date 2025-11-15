@@ -93,11 +93,11 @@
                     <DataGridTemplateColumn Header="Conta Remetente" Width="2*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding ContaRemetente}"
+                                <Button x:Name="ContaRemetente" Content="{Binding ContaRemetente}"
                                     Padding="0"
                                     Foreground="Black"
                                     HorizontalAlignment="Stretch"
-                                    Cursor="Hand"/>
+                                    Cursor="Hand" Click="ContaRemetente_Click"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -105,11 +105,11 @@
                     <DataGridTemplateColumn Header="Conta Destinatário" Width="2*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding ContaDestinatario}"
+                                <Button x:Name="ContaDestinatario" Content="{Binding ContaDestinatario}"
                                     Padding="0"
                                     Foreground="Black"
                                     HorizontalAlignment="Stretch"
-                                    Cursor="Hand"/>
+                                    Cursor="Hand" Click="ContaDestinatario_Click"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

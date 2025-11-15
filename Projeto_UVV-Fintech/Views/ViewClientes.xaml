@@ -88,11 +88,11 @@
                     <DataGridTemplateColumn Header="Nº de Contas" Width="1.2*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding NumeroDeContas}"
+                                <Button x:Name="NumeroDeContas" Content="{Binding NumeroDeContas}"
                                 Padding="0"
                                 Foreground="Black"
                                 HorizontalAlignment="Stretch"
-                                Cursor="Hand"/>
+                                Cursor="Hand" Click="NumeroDeContas_Click"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

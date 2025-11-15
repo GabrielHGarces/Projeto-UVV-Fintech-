@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Projeto_UVV_Fintech.Views"
         mc:Ignorable="d"
-        Title="ViewContas" Height="635" Width="800"
+        Title="ViewContas" Height="652" Width="800"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
 
@@ -24,6 +24,13 @@
         </StackPanel>
 
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,90,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
+                <Grid Width="166">
+                    <Label Content="ID Cliente" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
+                    <TextBox VerticalContentAlignment="Center" x:Name="ClienteID" Text="" Height="21" Margin="5,5,5,5" PreviewTextInput="NumericTextBox_PreviewTextInput" DataObject.Pasting="NumericTextBox_Pasting"/>
+                </Grid>
+            </StackPanel>
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
                 <Grid Width="166">
                     <Label Content="Número da Agencia" HorizontalAlignment="Left" Margin="0,-18,0,0" VerticalAlignment="Top" Height="27"/>
@@ -87,6 +94,7 @@
                     </Style>
                 </DataGrid.CellStyle>
                 <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID Cliente" Binding="{Binding IdCliente}" Width="0.7*" />
                     <DataGridTextColumn Header="Agencia" Binding="{Binding Agencia}" Width="0.7*" />
                     <DataGridTemplateColumn Header="Numero da conta" Width="1.3*">
                         <DataGridTemplateColumn.CellTemplate>
