@@ -20,7 +20,7 @@ namespace Projeto_UVV_Fintech.Model
             novo.DestinatarioId = destinatarioId;
             novo.ContaId = contaId;
             novo.Conta = contaAssociada;
-
+            contaAssociada.Transacoes.Add(novo);
 
             context.Transacoes.Add(novo);
             context.SaveChanges();

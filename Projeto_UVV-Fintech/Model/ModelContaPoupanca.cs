@@ -17,7 +17,7 @@ namespace Projeto_UVV_Fintech.Model
             novo.Saldo = saldo;
             novo.ClienteId = clienteId;
             novo.Cliente = clienteAssociado;
-
+            clienteAssociado.Contas.Add(novo);
             context.Contas.Add(novo);
             context.SaveChanges();
 

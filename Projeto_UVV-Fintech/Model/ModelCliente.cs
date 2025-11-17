@@ -19,7 +19,7 @@ namespace Projeto_UVV_Fintech.Model
                 CliNovo.Telefone = telefone;
                 CliNovo.DataNascimento = dataNascimento;
                 CliNovo.CEP = cEP;
-
+                
                 context.Clientes.Add(CliNovo);
                 context.SaveChanges();
 
@@ -27,10 +27,11 @@ namespace Projeto_UVV_Fintech.Model
                 
             }
 
+
             
 
         }
-        //Liga uma conta a um cliente
+       
 
     
     
