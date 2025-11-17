@@ -14,10 +14,15 @@ namespace Projeto_UVV_Fintech.Model
         public int ClienteId { get; set; } // Chave estrangeira para o Cliente
         public ICollection<Transacao> Transacoes { get; set; }
 
-
-        public Conta()
+        //Conta é uma classe abstrata Então ela não é instanciada
+        
+        //Função Relacional 1 cliente pode ter uma ou até 2 contas.
+        public bool LigarConta(int IdCliente)
         {
-            Saldo = 0;
+
+
+            return false;
         }
+        
     }
 }
