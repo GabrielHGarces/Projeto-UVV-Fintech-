@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Projeto_UVV_Fintech.Model
 {
-    internal class Conta
+    public class Conta
     {
         public int Id { get; set; }
         public double Saldo { get; set; }

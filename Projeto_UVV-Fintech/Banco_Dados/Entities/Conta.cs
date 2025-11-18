@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace Projeto_UVV_Fintech.Banco_Dados.Entities
 {
-    internal abstract class Conta
+    public abstract class Conta
     {
         [Key]
         public int Id { get; set; }

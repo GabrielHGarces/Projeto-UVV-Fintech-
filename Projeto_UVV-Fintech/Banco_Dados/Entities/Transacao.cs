@@ -15,7 +15,7 @@ namespace Projeto_UVV_Fintech.Banco_Dados.Entities
         Deposito,
         Transferencia
     }
-    internal class Transacao
+    public class Transacao
     {
         [Key]
         public int Id { get; set; }

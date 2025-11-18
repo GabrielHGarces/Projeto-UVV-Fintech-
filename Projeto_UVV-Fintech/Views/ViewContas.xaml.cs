@@ -46,7 +46,7 @@ namespace Projeto_UVV_Fintech.Views
             TabelaContas.ItemsSource = contas;
         }
 
-        public ViewContas(int nConta)
+        public ViewContas(Conta conta)
         {
             InitializeComponent();
 
@@ -57,14 +57,14 @@ namespace Projeto_UVV_Fintech.Views
                 new Conta { IdCliente = 3,  Agencia = 3456, NumConta = 78901, Tipo = "CP", DataDeAdesao = DateTime.Now, Saldo = 182763, Nome = "Irineu" },
             };
 
-            NConta.Text = nConta.ToString();
+            NConta.Text = conta.NumConta.ToString();
             //numeroConta = nConta;
 
 
             TabelaContas.ItemsSource = contas;
             PerformSearch();
         }
-        public ViewContas(int nConta, string a)
+        public ViewContas(Cliente clienteSelecionado)
         {
             InitializeComponent();
 
@@ -75,7 +75,7 @@ namespace Projeto_UVV_Fintech.Views
                 new Conta { IdCliente = 3,  Agencia = 3456, NumConta = 78901, Tipo = "CP", DataDeAdesao = DateTime.Now, Saldo = 182763, Nome = "Irineu" },
             };
 
-            ClienteID.Text = nConta.ToString();
+            ClienteID.Text = clienteSelecionado.Id.ToString();
             //numeroConta = nConta;
 
 

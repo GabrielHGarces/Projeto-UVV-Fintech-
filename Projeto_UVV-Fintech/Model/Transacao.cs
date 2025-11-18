@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Projeto_UVV_Fintech.Model
 {
-    internal class Transacao
+    public class Transacao
     {
     }
 }

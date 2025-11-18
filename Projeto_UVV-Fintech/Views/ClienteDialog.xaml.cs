@@ -28,6 +28,7 @@ namespace Projeto_UVV_Fintech.Views
         public ClienteDialog()
         {
             InitializeComponent();
+            DialogResult = false;
         }
 
         private void SomenteNumeros(object sender, System.Windows.Input.TextCompositionEventArgs e)

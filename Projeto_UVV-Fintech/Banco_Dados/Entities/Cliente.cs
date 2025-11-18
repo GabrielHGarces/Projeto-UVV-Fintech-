@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Projeto_UVV_Fintech.Banco_Dados.Entities
 {
-    internal class Cliente
+    public class Cliente
     {
         [Key] // Define que "Id" é a chave primária da tabela, Gerado altomaticamente pelo Migration
         public int Id { get; set; }
