@@ -5,19 +5,18 @@ using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
-namespace Projeto_UVV_Fintech.Model.Repository
+namespace Projeto_UVV_Fintech.Repository
 {
     internal class ContaCorrenteRepository 
     {
-        public void  InserirCorrente(double saldo, int clienteId)
+        public static bool CriarConta(int clienteId)
         {
             using var context = new DB_Context();
             
             Conta novo = new ContaCorrente();
             var clienteAssociado = context.Clientes.Find(clienteId);
-            novo.Saldo = saldo;
+            novo.Saldo = 0; // Saldo inicial zero pois está sendo criada zerada
             novo.ClienteId = clienteId;
             novo.Cliente = clienteAssociado;
             clienteAssociado.Contas.Add(novo);
@@ -25,21 +24,24 @@ namespace Projeto_UVV_Fintech.Model.Repository
             context.Contas.Add(novo);
             context.SaveChanges();
 
-            
-
-
-
+            return true;
         }
 
-        public void TodasContasCorrentes()
+        public static List<Conta> ListarContas()
         {
             using var context = new DB_Context();
-            var contas = context.Contas.ToList();
-            foreach (var conta in contas)
-            {
-                MessageBox.Show($"ID: {conta.Id},Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+            return context.Contas.ToList(); // Ele retorna somente as contas correntes?
 
-            }
+            //foreach (var conta in contas)
+            //{
+            //    MessageBox.Show($"ID: {conta.Id},Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+
+            //}
+        }
+
+        public static List<Conta> FiltrarContas(int? IdCliente, int? numerConta, int? numeroAgencia, string? tipoConta, string? nomeTitular, double? saldo, DateTime? dataCriacao, bool? saldoMaior, bool? dataMaior)
+        {
+            return new List<Conta>(); // adicionar a implementação depois
         }
 
         public void AtualizarContaCorrente(int contaId, double novoSaldo)
@@ -53,7 +55,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Conta Corrente não encontrada.");
+                //MessageBox.Show("Conta Corrente não encontrada.");
             }
         }
         
@@ -68,7 +70,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Conta Corrente não encontrada.");
+                //MessageBox.Show("Conta Corrente não encontrada.");
             }
         }
 
@@ -82,7 +84,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Conta Corrente não encontrada.");
+                //MessageBox.Show("Conta Corrente não encontrada.");
                 return 0.0;
             }
         }
@@ -98,7 +100,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Conta Corrente não encontrada.");
+                //MessageBox.Show("Conta Corrente não encontrada.");
             }
         }
 
@@ -108,11 +110,11 @@ namespace Projeto_UVV_Fintech.Model.Repository
             var conta = context.Contas.Find(contaId);
             if (conta != null && conta is ContaCorrente)
             {
-                MessageBox.Show($"ID: {conta.Id}\nTipo de Conta: Corrente\nSaldo: {conta.Saldo}\nClienteId: {conta.ClienteId}\nData de Criação: {conta.DataCriacao}");
+                //MessageBox.Show($"ID: {conta.Id}\nTipo de Conta: Corrente\nSaldo: {conta.Saldo}\nClienteId: {conta.ClienteId}\nData de Criação: {conta.DataCriacao}");
             }
             else
             {
-                MessageBox.Show("Conta Corrente não encontrada.");
+                //MessageBox.Show("Conta Corrente não encontrada.");
             }
         }
 
@@ -122,7 +124,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             var contas = context.Contas.Where(c => c.ClienteId == clienteId && c is ContaCorrente).ToList();
             foreach (var conta in contas)
             {
-                MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
             }
         }
 
@@ -141,7 +143,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             var contas = context.Contas.Where(c => c is ContaCorrente).ToList();
             foreach (var conta in contas)
             {
-                MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
             }
         }
 
@@ -151,7 +153,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             var contas = context.Contas.Where(c => c is ContaCorrente && c.Saldo > saldoMinimo).ToList();
             foreach (var conta in contas)
             {
-                MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
             }
         }
 
@@ -161,11 +163,9 @@ namespace Projeto_UVV_Fintech.Model.Repository
             var contas = context.Contas.Where(c => c is ContaCorrente && c.Saldo < saldoMaximo).ToList();
             foreach (var conta in contas)
             {
-                MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
             }
         }
-
-
 
     }
 }

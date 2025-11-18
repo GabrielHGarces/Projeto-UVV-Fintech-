@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
-namespace Projeto_UVV_Fintech.Model.Repository
+namespace Projeto_UVV_Fintech.Repository
 {
     internal class ContaPoupancaRepository
     {
-        public void InserirPoupanca(double saldo, int clienteId)
+        public bool CriarConta(double saldo, int clienteId)
         {
             using var context = new DB_Context();
             Conta novo = new ContaPoupanca();
@@ -22,18 +21,18 @@ namespace Projeto_UVV_Fintech.Model.Repository
             context.Contas.Add(novo);
             context.SaveChanges();
 
-
+            return true;
         }
 
-        public void TodasContasPoupanca()
+        public static List<Conta> ListarContas()
         {
             using var context = new DB_Context();
-            var contas = context.Contas.ToList();
-            foreach (var conta in contas)
-            {
-                MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança,  Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}");
+            return context.Contas.ToList();
+            //foreach (var conta in contas)
+            //{
+            //    MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança,  Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}");
 
-            }
+            //}
         }
 
 
@@ -48,7 +47,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Conta Poupança não encontrada.");
+                //MessageBox.Show("Conta Poupança não encontrada.");
             }
         }
 
@@ -63,11 +62,11 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Conta Poupança não encontrada.");
+                //MessageBox.Show("Conta Poupança não encontrada.");
             }
         }
 
-        public ContaPoupanca? ObterContaPoupancaPorId(int contaId)
+        public ContaPoupanca? ObterContaPorId(int contaId)
         {
             using var context = new DB_Context();
             var conta = context.Contas.Find(contaId);
@@ -90,11 +89,11 @@ namespace Projeto_UVV_Fintech.Model.Repository
             var conta = context.Contas.Find(contaId);
             if (conta != null && conta is ContaPoupanca)
             {
-                MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
             }
             else
             {
-                MessageBox.Show("Conta Poupança não encontrada.");
+                //MessageBox.Show("Conta Poupança não encontrada.");
             }
 
         }
@@ -107,12 +106,12 @@ namespace Projeto_UVV_Fintech.Model.Repository
             {
                 foreach (var conta in contas)
                 {
-                    MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                    //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
                 }
             }
             else
             {
-                MessageBox.Show("Nenhuma Conta Poupança encontrada para este Cliente.");
+                //MessageBox.Show("Nenhuma Conta Poupança encontrada para este Cliente.");
             }
         }
 
@@ -122,7 +121,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             var contas = context.Contas.OfType<ContaPoupanca>().ToList();
             foreach (var conta in contas)
             {
-                MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
             }
         }
 
@@ -135,12 +134,12 @@ namespace Projeto_UVV_Fintech.Model.Repository
             {
                 foreach (var conta in contas)
                 {
-                    MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                    //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
                 }
             }
             else
             {
-                MessageBox.Show("Nenhuma Conta Poupança encontrada com saldo maior que o valor especificado.");
+                //MessageBox.Show("Nenhuma Conta Poupança encontrada com saldo maior que o valor especificado.");
             }
         }
 
@@ -152,12 +151,12 @@ namespace Projeto_UVV_Fintech.Model.Repository
             {
                 foreach (var conta in contas)
                 {
-                    MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                    //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
                 }
             }
             else
             {
-                MessageBox.Show("Nenhuma Conta Poupança encontrada com saldo menor que o valor especificado.");
+                //MessageBox.Show("Nenhuma Conta Poupança encontrada com saldo menor que o valor especificado.");
             }
         }
 
@@ -171,16 +170,13 @@ namespace Projeto_UVV_Fintech.Model.Repository
             {
                 foreach (var conta in contas)
                 {
-                    MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
+                    //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
                 }
             }
             else
             {
-                MessageBox.Show("Nenhuma Conta Poupança encontrada para o nome de cliente especificado.");
+                //MessageBox.Show("Nenhuma Conta Poupança encontrada para o nome de cliente especificado.");
             }
         }
-
-
-
     }
 }

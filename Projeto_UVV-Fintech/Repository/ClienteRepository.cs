@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
-namespace Projeto_UVV_Fintech.Model.Repository
+namespace Projeto_UVV_Fintech.Repository
 {
     internal class ClienteRepository
     {
         //Vou transformar em bool depois
-        public void InserirCliente(string name, DateTime dataNascimento, string cEP, string telefone)
+        public static bool CriarCliente(string name, DateTime dataNascimento, string cEP, string telefone)
         {
 
             using var context = new DB_Context();
@@ -24,20 +23,25 @@ namespace Projeto_UVV_Fintech.Model.Repository
             context.Clientes.Add(CliNovo);
             context.SaveChanges();
 
-
-
+            return true;
         }
 
-        public void todosClientes()
+        public static List<Cliente> ListarClientes()
         {
             using var context = new DB_Context();
-            var clientes = context.Clientes.ToList();
-            foreach (var cliente in clientes)
-            {
-                MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
+            return context.Clientes.ToList();
+            //foreach (var cliente in clientes)
+            //{
+            //    MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
 
-            }
+            //}
         }
+
+        public static List<Cliente> FiltrarClientes(int? idCliente, string? telefone, string? cep, string? nomeCliente, int? numeroDeContas, DateTime? dataAdesao, bool? dataMaiorQue)
+        {
+            return new List<Cliente>(); // adicionar a implementação depois
+        }
+
 
         public void DeletarCliente(int clienteId)
         {
@@ -50,7 +54,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Cliente não encontrado.");
+                //MessageBox.Show("Cliente não encontrado.");
             }
         }
 
@@ -68,7 +72,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Cliente não encontrado.");
+                //MessageBox.Show("Cliente não encontrado.");
             }
         }
 
@@ -91,11 +95,11 @@ namespace Projeto_UVV_Fintech.Model.Repository
             var cliente = context.Clientes.Find(id);
             if (cliente != null)
             {
-                MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
+                //MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
             }
             else
             {
-                MessageBox.Show("Cliente não encontrado.");
+                //MessageBox.Show("Cliente não encontrado.");
             }
 
         }
@@ -110,12 +114,12 @@ namespace Projeto_UVV_Fintech.Model.Repository
             {
                 foreach (var cliente in clientes)
                 {
-                    MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
+                    //MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
                 }
             }
             else
             {
-                MessageBox.Show("Nenhum cliente encontrado com esse nome.");
+                //MessageBox.Show("Nenhum cliente encontrado com esse nome.");
             }
         }
 
@@ -129,12 +133,12 @@ namespace Projeto_UVV_Fintech.Model.Repository
             {
                 foreach (var cliente in clientes)
                 {
-                    MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
+                    //MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
                 }
             }
             else
             {
-                MessageBox.Show("Nenhum cliente encontrado com esse telefone.");
+                //MessageBox.Show("Nenhum cliente encontrado com esse telefone.");
             }
         }
 
@@ -148,12 +152,12 @@ namespace Projeto_UVV_Fintech.Model.Repository
             {
                 foreach (var cliente in clientes)
                 {
-                    MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
+                    //MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
                 }
             }
             else
             {
-                MessageBox.Show("Nenhum cliente encontrado com esse CEP.");
+                //MessageBox.Show("Nenhum cliente encontrado com esse CEP.");
             }
         }
 
@@ -167,12 +171,12 @@ namespace Projeto_UVV_Fintech.Model.Repository
             {
                 foreach (var cliente in clientes)
                 {
-                    MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
+                    //MessageBox.Show($"ID: {cliente.Id}, Nome: {cliente.Nome}, Telefone: {cliente.Telefone}, Data de Nascimento: {cliente.DataNascimento}, CEP: {cliente.CEP}");
                 }
             }
             else
             {
-                MessageBox.Show("Nenhum cliente encontrado com essa data de nascimento.");
+                //MessageBox.Show("Nenhum cliente encontrado com essa data de nascimento.");
             }
         }
 

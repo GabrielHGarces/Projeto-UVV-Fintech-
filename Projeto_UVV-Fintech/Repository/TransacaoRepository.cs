@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
-namespace Projeto_UVV_Fintech.Model.Repository
+namespace Projeto_UVV_Fintech.Repository
 {
     internal class TransacaoRepository
     {
-        public void InserirTransacao(TipoTransacao tipo, double valor, int? remetenteId, int? destinatarioId, int contaId)
+        public static bool CriarTransacao(TipoTransacao tipo, double valor, int? remetenteId, int? destinatarioId, int contaId)
         {
             using var context = new DB_Context();
             Transacao novo = new Transacao();
@@ -26,19 +25,25 @@ namespace Projeto_UVV_Fintech.Model.Repository
             context.Transacoes.Add(novo);
             context.SaveChanges();
 
-
+            return true;
         }
 
-        public void TodasTransacoes()
+        public static List<Transacao> ListarTransacoes()
         {
             using var context = new DB_Context();
-            var transacoes = context.Transacoes.ToList();
-            foreach (var transacao in transacoes)
-            {
-                MessageBox.Show($"ID: {transacao.Id} | Tipo: {transacao.Tipo} | Valor: {transacao.Valor}  ");
+            return context.Transacoes.ToList();
+            //foreach (var transacao in transacoes)
+            //{
+            //    MessageBox.Show($"ID: {transacao.Id} | Tipo: {transacao.Tipo} | Valor: {transacao.Valor}  ");
 
-            }
+            //}
         }
+
+        public List<Transacao> FiltrarTransacoes(int? idTransacao, int? contaRemetente, int? contaDestinatario, string? tipo, double? valor, DateTime? dataTransacao, bool? valorMaior, bool? dataMaior)
+        {
+            return new List<Transacao>(); // adicionar a implementação depois
+        }
+
 
         public void DeletarTransacao(int transacaoId)
         {
@@ -53,7 +58,7 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Transação não encontrada.");
+                //MessageBox.Show("Transação não encontrada.");
 
 
 
@@ -72,17 +77,17 @@ namespace Projeto_UVV_Fintech.Model.Repository
             }
             else
             {
-                MessageBox.Show("Transação não encontrada.");
+                //MessageBox.Show("Transação não encontrada.");
 
 
             }
 
         }
 
-       public void  BuscarPorID(int id)
+       public Transacao? ObterTransacaoPorId(int id)
        {
-
-       }
+            return null; // adicionar a implementação depois
+        }
 
        public void BuscarPorRemetente(int id)
        {

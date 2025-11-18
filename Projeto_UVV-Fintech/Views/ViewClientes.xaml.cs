@@ -1,4 +1,4 @@
-﻿using Projeto_UVV_Fintech.Model.Repository;
+﻿using Projeto_UVV_Fintech.Repository;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -225,8 +225,8 @@ namespace Projeto_UVV_Fintech.Views
 
             //TabelaClientes.ItemsSource = filtrado;
             ClienteRepository modelCliente = new ClienteRepository();
-            modelCliente.InserirCliente("Gostosin guanabara", DateTime.Now, "123", "456");
-            modelCliente.todosClientes();
+            modelCliente.CriarCliente("Gostosin guanabara", DateTime.Now, "123", "456");
+            modelCliente.ListarClientes();
         }
 
         private void NumeroDeContas_Click(object sender, RoutedEventArgs e)
