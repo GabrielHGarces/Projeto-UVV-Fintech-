@@ -1,10 +1,12 @@
 ﻿using Projeto_UVV_Fintech.Banco_Dados.Entities;
+using Projeto_UVV_Fintech.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Projeto_UVV_Fintech.Repository
 {
@@ -43,6 +45,79 @@ namespace Projeto_UVV_Fintech.Repository
 
             //}
         }
+
+        public static bool Depositar(Conta conta, double valor)
+        {
+            if (conta == null)
+            {
+                return false;
+            }
+
+            
+                
+            conta.Saldo += valor;
+            using var context = new DB_Context();
+            context.Contas.Update(conta);
+            
+            context.SaveChanges();
+            TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, conta.Id, conta.Id, conta.Id);
+            return true;
+
+            
+           
+
+        }
+
+        public static bool Sacar(Conta conta, double valor)
+        {
+            if (conta == null || conta.Saldo < valor)
+            {
+                return false;
+            }
+
+            
+            
+            conta.Saldo -= valor;
+            using var context = new DB_Context();
+            context.Contas.Update(conta);
+            context.SaveChanges();
+            TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, conta.Id, conta.Id, conta.Id);
+            return true;
+            
+        }
+
+        public static bool Transferir(Conta contaOrigem, Conta contaDestino, double valor)
+        {
+            if (contaOrigem == null || contaDestino == null)
+                return false;
+
+            
+
+
+            if (contaOrigem.Saldo < valor)
+            {
+
+                return false;
+            }
+            else{
+                using var context = new DB_Context();
+
+                contaOrigem.Saldo -= valor;
+                contaDestino.Saldo += valor;
+
+                context.Contas.Update(contaOrigem);
+                context.Contas.Update(contaDestino);
+
+
+                context.SaveChanges();
+                TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
+                return true;
+            }
+
+            
+        }
+
+
 
         public static List<Conta> FiltrarContas(int? idCliente,int? numeroConta,int? numeroAgencia,string? tipoConta,string? nomeTitular,double? saldo,DateTime? dataCriacao,bool? saldoMaior,bool? dataMaior)
         {
