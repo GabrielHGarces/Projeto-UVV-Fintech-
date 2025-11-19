@@ -76,12 +76,7 @@ namespace Projeto_UVV_Fintech.Views
 
         private void ClienteID_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int idCliente = ClienteID.Text != "" ? int.Parse(ClienteID.Text) : 0;
-
-            var conta = _controller.FiltrarContas(IdCliente: ClienteID.Text, null, null, null, null, null, null, null, null).FirstOrDefault();
-            string nomeCliente = conta != null ? conta.Cliente.Nome : string.Empty;
-
-            NomeCliente.Text = nomeCliente;
+            NomeCliente.Text = _controller.GetNomeClientePorId(ClienteID.Text);
         }
     }
 }

@@ -99,8 +99,15 @@ namespace Projeto_UVV_Fintech.Controller
             {
                 List<Conta> resultadoPoupanca = ContaPoupancaRepository.ListarContas();
                 List<Conta> resultadoCorrente = ContaCorrenteRepository.ListarContas();
-                _view.TabelaContas.ItemsSource = resultadoPoupanca.Concat(resultadoCorrente).ToList();
-                return resultadoPoupanca.Concat(resultadoCorrente).ToList();
+
+                var todasContas = resultadoPoupanca.Concat(resultadoCorrente);
+                var contasUnicas = todasContas
+                    .GroupBy(c => c.Id)
+                    .Select(g => g.First())
+                    .ToList();
+
+                _view.TabelaContas.ItemsSource = contasUnicas;
+                return contasUnicas;
             } catch (Exception ex)
             {
                 MessageBox.Show("Erro ao listar contas: " + ex.Message);
@@ -112,30 +119,33 @@ namespace Projeto_UVV_Fintech.Controller
         {
             try
             {
+                if (!int.TryParse(IdCliente, out int idClienteInt))
+                {
+                    return new List<Conta>();
+                }
+
                 List<Conta> resultado;
                 if (tipoConta == "CP")
                 {
                     resultado = ContaPoupancaRepository.FiltrarContas(
-                    int.Parse(IdCliente), numerConta, numeroAgencia, tipoConta,
+                    idClienteInt, numerConta, numeroAgencia, tipoConta,
                     nomeTitular, saldo, dataCriacao, saldoMaior, dataMaior);
                 } else if (tipoConta == "CC")
                 {
                     resultado = ContaCorrenteRepository.FiltrarContas(
-                    int.Parse(IdCliente), numerConta, numeroAgencia, tipoConta,
+                    idClienteInt, numerConta, numeroAgencia, tipoConta,
                     nomeTitular, saldo, dataCriacao, saldoMaior, dataMaior);
                 } else
                 {
                     List<Conta> resultadoPoupanca = ContaPoupancaRepository.FiltrarContas(
-                    int.Parse(IdCliente), numerConta, numeroAgencia, tipoConta,
+                    idClienteInt, numerConta, numeroAgencia, tipoConta,
                     nomeTitular, saldo, dataCriacao, saldoMaior, dataMaior);
                     List<Conta> resultadoCorrente = ContaCorrenteRepository.FiltrarContas(
-                    int.Parse(IdCliente), numerConta, numeroAgencia, tipoConta,
+                    idClienteInt, numerConta, numeroAgencia, tipoConta,
                     nomeTitular, saldo, dataCriacao, saldoMaior, dataMaior);
                     resultado = resultadoPoupanca.Concat(resultadoCorrente).ToList();
                 }
 
-
-                _view.TabelaContas.ItemsSource = resultado;
                 return resultado;
             } catch (Exception ex)
             {
@@ -174,6 +184,16 @@ namespace Projeto_UVV_Fintech.Controller
         //{
         //    return Conta.ObterContaPorId(contaId);
         //}
+
+        public string GetNomeClientePorId(string idCliente)
+        {
+            if (int.TryParse(idCliente, out int id))
+            {
+                var cliente = ClienteRepository.ObterClientePorId(id);
+                return cliente?.Nome ?? string.Empty;
+            }
+            return string.Empty;
+        }
 
         public void AbrirViewClientes(Conta contaSelecionada)
         {

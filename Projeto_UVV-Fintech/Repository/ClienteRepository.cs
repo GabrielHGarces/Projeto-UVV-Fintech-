@@ -106,7 +106,7 @@ namespace Projeto_UVV_Fintech.Repository
             }
         }
 
-        public Cliente ObterClientePorId(int clienteId)
+        public static Cliente ObterClientePorId(int clienteId)
         {
             using var context = new DB_Context();
             return context.Clientes.Find(clienteId);

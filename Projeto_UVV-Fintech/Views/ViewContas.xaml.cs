@@ -174,7 +174,7 @@ namespace Projeto_UVV_Fintech.Views
 
         private void PerformSearch()
         {
-            contaController.FiltrarContas(
+            TabelaContas.ItemsSource = contaController.FiltrarContas(
                 ClienteID.Text, numeroConta, numeroAgencia, tipoConta,
                 nomeTitular, saldo != 0 ? saldo : (double?)null,
                 dataSelecionada, saldoMaiorQue, dataMaiorQue);
