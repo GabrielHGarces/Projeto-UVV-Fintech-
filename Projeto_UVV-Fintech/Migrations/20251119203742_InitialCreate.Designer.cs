@@ -11,7 +11,7 @@ using Projeto_UVV_Fintech.Banco_Dados.Entities;
 namespace Projeto_UVV_Fintech.Migrations
 {
     [DbContext(typeof(DB_Context))]
-    [Migration("20251119193012_InitialCreate")]
+    [Migration("20251119203742_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -39,6 +39,10 @@ namespace Projeto_UVV_Fintech.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NumeroContasCliente")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Telefone")
@@ -96,19 +100,19 @@ namespace Projeto_UVV_Fintech.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ContaDestinatario")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ContaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ContaRemetente")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DataHoraTransacao")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int>("DestinatarioId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RemetenteId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Tipo")
                         .HasColumnType("INTEGER");

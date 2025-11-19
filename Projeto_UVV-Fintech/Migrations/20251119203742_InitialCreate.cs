@@ -20,7 +20,8 @@ namespace Projeto_UVV_Fintech.Migrations
                     Nome = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     DataAdesao = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "date('now')"),
                     CEP = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
-                    Telefone = table.Column<string>(type: "TEXT", maxLength: 9, nullable: false)
+                    Telefone = table.Column<string>(type: "TEXT", maxLength: 9, nullable: false),
+                    NumeroContasCliente = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,8 +61,8 @@ namespace Projeto_UVV_Fintech.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Tipo = table.Column<int>(type: "INTEGER", nullable: false),
                     Valor = table.Column<double>(type: "REAL", nullable: false),
-                    RemetenteId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DestinatarioId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ContaRemetente = table.Column<int>(type: "INTEGER", nullable: false),
+                    ContaDestinatario = table.Column<int>(type: "INTEGER", nullable: false),
                     DataHoraTransacao = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     ContaId = table.Column<int>(type: "INTEGER", nullable: false)
                 },

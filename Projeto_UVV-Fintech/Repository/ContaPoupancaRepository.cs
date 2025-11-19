@@ -17,6 +17,7 @@ namespace Projeto_UVV_Fintech.Repository
             novo.Saldo = 0;
             novo.ClienteId = clienteId;
             novo.Cliente = clienteAssociado;
+            clienteAssociado.NumeroContasCliente += 1;
             clienteAssociado.Contas.Add(novo);
             context.Contas.Add(novo);
             context.SaveChanges();

@@ -9,15 +9,15 @@ namespace Projeto_UVV_Fintech.Repository
 {
     internal class TransacaoRepository
     {
-        public static bool CriarTransacao(TipoTransacao tipo, double valor, int? remetenteId, int? destinatarioId, int contaId)
+        public static bool CriarTransacao(TipoTransacao tipo, double valor, int? contaRemetente, int? contaDestinatario, int contaId)
         {
             using var context = new DB_Context();
             Transacao novo = new Transacao();
             var contaAssociada = context.Contas.Find(contaId);
             novo.Tipo = tipo;
             novo.Valor = valor;
-            novo.RemetenteId = remetenteId;
-            novo.DestinatarioId = destinatarioId;
+            novo.ContaRemetente = contaRemetente;
+            novo.ContaDestinatario = contaDestinatario;
             novo.ContaId = contaId;
             novo.Conta = contaAssociada;
             contaAssociada.Transacoes.Add(novo);
@@ -42,8 +42,8 @@ namespace Projeto_UVV_Fintech.Repository
             var filtrado = transacoes
                 .Where(t =>
                     (idTransacao == null || t.Id == idTransacao) &&
-                    (contaRemetente == null || t.RemetenteId == contaRemetente) &&
-                    (contaDestinatario == null || t.DestinatarioId == contaDestinatario) &&
+                    (contaRemetente == null || t.ContaRemetente == contaRemetente) &&
+                    (contaDestinatario == null || t.ContaDestinatario == contaDestinatario) &&
                     (string.IsNullOrWhiteSpace(tipo) || t.Tipo.ToString().Contains(tipo, StringComparison.OrdinalIgnoreCase)) &&
                     (
                         valor == null ||

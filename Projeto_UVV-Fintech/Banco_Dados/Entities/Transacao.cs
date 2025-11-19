@@ -28,13 +28,13 @@ namespace Projeto_UVV_Fintech.Banco_Dados.Entities
 
         [Required]
         //Conta que enviou
-        public int? RemetenteId { get; set; }
+        public int? ContaRemetente { get; set; }
 
 
 
         [Required]
         //Conta que recebeu
-        public int? DestinatarioId { get; set; }
+        public int? ContaDestinatario { get; set; }
 
         // Campo para armazenar a data de criação
         [Required]
@@ -53,13 +53,13 @@ namespace Projeto_UVV_Fintech.Banco_Dados.Entities
         // 👇 Propriedade de navegação (referência à Categoria)
         public Conta Conta { get; set; } = null!;
         public Transacao() { }
-        public Transacao( TipoTransacao tipo, double valor, int? remetenteId, int? destinatarioId, int contaId)
+        public Transacao( TipoTransacao tipo, double valor, int? contaDestinatario, int? contaRemetente, int contaId)
         {
             
             Tipo = tipo;
             Valor = valor;
-            RemetenteId = remetenteId;
-            DestinatarioId = destinatarioId;
+            ContaDestinatario = contaDestinatario ;
+            ContaRemetente = contaRemetente;
             ContaId = contaId;
             
         }

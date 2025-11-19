@@ -29,8 +29,8 @@ namespace Projeto_UVV_Fintech.Banco_Dados.Entities
         [MaxLength(9)] //Tamanho Maximo
         public string Telefone { get; set; } = null!;
 
+        public string NumeroContasCliente { get; set; } = null!;
 
-       
 
         //Um CLiente pode ter várias contas
         public ICollection<Conta> Contas { get; set; } = [];

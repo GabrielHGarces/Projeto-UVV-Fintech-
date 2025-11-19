@@ -38,6 +38,10 @@ namespace Projeto_UVV_Fintech.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NumeroContasCliente")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Telefone")
                         .IsRequired()
                         .HasMaxLength(9)
@@ -93,19 +97,19 @@ namespace Projeto_UVV_Fintech.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ContaDestinatario")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ContaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ContaRemetente")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DataHoraTransacao")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int>("DestinatarioId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RemetenteId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Tipo")
                         .HasColumnType("INTEGER");

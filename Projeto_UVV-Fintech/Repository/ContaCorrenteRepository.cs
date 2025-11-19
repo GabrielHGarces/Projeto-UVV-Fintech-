@@ -25,6 +25,7 @@ namespace Projeto_UVV_Fintech.Repository
             novo.Agencia = rand.Next(10000, 99999); // Gera um número de agência aleatório entre 10000 e 99999
             novo.NumeroConta = rand.Next(100000, 999999); // Gera um número de conta aleatório entre 100000 e 999999
 
+            clienteAssociado.NumeroContasCliente += 1;
 
             clienteAssociado.Contas.Add(novo);
 
