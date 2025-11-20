@@ -69,74 +69,7 @@ namespace Projeto_UVV_Fintech.Repository
 
 
 
-        public void DeletarTransacao(int transacaoId)
-        {
-            using var context = new DB_Context();
-            var transacao = context.Transacoes.Find(transacaoId);
-            if (transacao != null)
-            {
-                context.Transacoes.Remove(transacao);
-                context.SaveChanges();
-
-
-            }
-            else
-            {
-               
-
-
-
-            }
-        }
-
-        public void AtualizarTransacao(int transacaoId, TipoTransacao novoTipo, double novoValor)
-        {
-            using var context = new DB_Context();
-            var transacao = context.Transacoes.Find(transacaoId);
-            if (transacao != null)
-            {
-                transacao.Tipo = novoTipo;
-                transacao.Valor = novoValor;
-                context.SaveChanges();
-            }
-            else
-            {
-                //MessageBox.Show("Transação não encontrada.");
-
-
-            }
-
-        }
-
         
-
-
-       public Transacao? ObterTransacaoPorId(int id)
-       {
-            return null; // adicionar a implementação depois
-        }
-
-       public void BuscarPorRemetente(int id)
-       {
-
-        }
-
-       public void BuscarPorDestinatario(int id)
-       {
-        }
-    
-       public void BuscarValorMaiorQue(double valor)
-       {
-        
-        }
-
-       public void BuscarValorMenorQue(double valor)
-       {
-        }
-       public void BuscarPorData(DateTime data)
-       {
-
-        }
 
     }
 

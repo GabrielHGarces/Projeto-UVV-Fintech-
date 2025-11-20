@@ -112,13 +112,13 @@ namespace Projeto_UVV_Fintech.Controller
                 
                 var contasViewModel = contasUnicas.Select(conta => new ContaViewModel
                 {
-                     ClienteId = conta.ClienteId,
+                     ClienteId = conta.Cliente.Id,
                      Agencia = conta.Agencia,
                      NumeroConta = conta.NumeroConta,
                      Tipo = conta.GetType().Name == "ContaCorrente" ? "CC" : "CP",
                      DataCriacao = conta.DataCriacao,
                      Saldo = conta.Saldo,
-                     NomeCliente = GetNomeClientePorId(conta.ClienteId.ToString())
+                     NomeCliente = GetNomeClientePorId(conta.Cliente.Id.ToString())
                 }).ToList();
 
                 _view.TabelaContas.ItemsSource = contasViewModel;
@@ -171,13 +171,13 @@ namespace Projeto_UVV_Fintech.Controller
 
                 var contasViewModel = resultado.Select(conta => new ContaViewModel
                 {
-                    ClienteId = conta.ClienteId,
+                    ClienteId = conta.Cliente.Id,
                     Agencia = conta.Agencia,
                     NumeroConta = conta.NumeroConta,
                     Tipo = conta.GetType().Name == "ContaCorrente" ? "CC" : "CP",
                     DataCriacao = conta.DataCriacao,
                     Saldo = conta.Saldo,
-                    NomeCliente = GetNomeClientePorId(conta.ClienteId.ToString())
+                    NomeCliente = GetNomeClientePorId(conta.Cliente.Id.ToString())
                 }).ToList();
 
                 _view.TabelaContas.ItemsSource = contasViewModel;

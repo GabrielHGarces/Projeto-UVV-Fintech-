@@ -30,9 +30,8 @@ namespace Projeto_UVV_Fintech.Banco_Dados.Entities
         public DateTime DataCriacao { get; set; }
 
         // 🔹 FK — Uma conta pertence a um cliente
-        [ForeignKey("Cliente")]
-        public int ClienteId { get; set; }
-
+        [ForeignKey("ClienteId")]
+        public int ClienteId { get; set; } 
         public Cliente Cliente { get; set; } = null!;
 
         public int Agencia { get; set; }
@@ -40,9 +39,6 @@ namespace Projeto_UVV_Fintech.Banco_Dados.Entities
         // 🔹 Relação — Uma conta tem várias transações
         public ICollection<Transacao> Transacoes { get; set; } = [];
 
-        public override string ToString()
-        {
-            return $"Id: {Id}, Saldo: {Saldo:C}, ClienteId: {ClienteId}";
-        }
+        
     }
 }

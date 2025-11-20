@@ -16,18 +16,42 @@ namespace Projeto_UVV_Fintech.Repository
         public static bool CriarConta(int clienteId)
         {
             using var context = new DB_Context();
+            int agencia = 0;
+            var clienteAssociado = context.Clientes
+                .Include(c => c.Contas)
+                .FirstOrDefault(c => c.Id == clienteId);
             
-            Conta novo = new ContaCorrente();
-            var clienteAssociado = context.Clientes.Find(clienteId);
-            novo.Saldo = 0; // Saldo inicial zero pois está sendo criada zerada
-            novo.ClienteId = clienteId;
-            novo.Cliente = clienteAssociado;
-            Random rand = new Random();
-            novo.Agencia = rand.Next(10000, 99999); // Gera um número de agência aleatório entre 10000 e 99999
-            novo.NumeroConta = rand.Next(100000, 999999); // Gera um número de conta aleatório entre 100000 e 999999
+            if (clienteAssociado == null)
+                return false;
 
-            clienteAssociado.NumeroContasCliente += 1;
+            // VERIFICA SE JÁ EXISTE CONTA CORRENTE
+            foreach (var conta in clienteAssociado.Contas)
+            {
+                if (conta != null)
+                {
+                    agencia = conta.Agencia;
+                }
+                if (conta is ContaCorrente)
+                    return false;
+            }
 
+            if (agencia == 0)
+            {
+                agencia = new Random().Next(10000, 99999);
+            }
+            Conta novo = new ContaCorrente
+            {
+                Saldo = 0,
+                Cliente = clienteAssociado,
+                
+               ClienteId = clienteAssociado.Id,
+                Agencia = agencia,
+                
+
+                NumeroConta = new Random().Next(100000, 999999),
+            };
+
+            
             clienteAssociado.Contas.Add(novo);
 
             context.Contas.Add(novo);
@@ -36,13 +60,14 @@ namespace Projeto_UVV_Fintech.Repository
             return true;
         }
 
+
         public static List<ContaCorrente> ListarContas()
         {
             using var context = new DB_Context();
             return context.Contas.OfType<ContaCorrente>().Include(c => c.Cliente).ToList();
         }
 
-        public static bool Depositar(Conta conta, double valor)
+        public static bool DepositarCorrente(Conta conta, double valor)
         {
             if (conta == null)
             {
@@ -64,7 +89,7 @@ namespace Projeto_UVV_Fintech.Repository
 
         }
 
-        public static bool Sacar(Conta conta, double valor)
+        public static bool SacarCorrente(Conta conta, double valor)
         {
             if (conta == null || conta.Saldo < valor)
             {
@@ -77,12 +102,12 @@ namespace Projeto_UVV_Fintech.Repository
             using var context = new DB_Context();
             context.Contas.Update(conta);
             context.SaveChanges();
-            TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, conta.Id, conta.Id, conta.Id);
+            TransacaoRepository.CriarTransacao(TipoTransacao.Saque, valor, conta.Id, conta.Id, conta.Id);
             return true;
             
         }
 
-        public static bool Transferir(Conta contaOrigem, Conta contaDestino, double valor)
+        public static bool TransferirCorrente(Conta contaOrigem, Conta contaDestino, double valor)
         {
             if (contaOrigem == null || contaDestino == null)
                 return false;
@@ -106,7 +131,7 @@ namespace Projeto_UVV_Fintech.Repository
 
 
                 context.SaveChanges();
-                TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
+                TransacaoRepository.CriarTransacao(TipoTransacao.Transferencia, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
                 return true;
             }
 
@@ -119,7 +144,7 @@ namespace Projeto_UVV_Fintech.Repository
             IQueryable<Conta> query = context.Contas.OfType<ContaCorrente>().Include(c => c.Cliente);
 
             if (idCliente.HasValue)
-                query = query.Where(c => c.ClienteId == idCliente.Value);
+                query = query.Where(c => c.Cliente.Id== idCliente.Value);
 
             if (numeroConta.HasValue)
                 query = query.Where(c => c.NumeroConta == numeroConta.Value);
@@ -150,128 +175,7 @@ namespace Projeto_UVV_Fintech.Repository
         }
 
 
-        public void AtualizarContaCorrente(int contaId, double novoSaldo)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                conta.Saldo = novoSaldo;
-                context.SaveChanges();
-            }
-            else
-            {
-                //MessageBox.Show("Conta Corrente não encontrada.");
-            }
-        }
         
-        public void DeletarContaCorrente(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                context.Contas.Remove(conta);
-                context.SaveChanges();
-            }
-            else
-            {
-                //MessageBox.Show("Conta Corrente não encontrada.");
-            }
-        }
-
-        public double ObterSaldo(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                return conta.Saldo;
-            }
-            else
-            {
-                //MessageBox.Show("Conta Corrente não encontrada.");
-                return 0.0;
-            }
-        }
-
-        public void AtualizarSaldo(int contaId, double novoSaldo)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                conta.Saldo = novoSaldo;
-                context.SaveChanges();
-            }
-            else
-            {
-                //MessageBox.Show("Conta Corrente não encontrada.");
-            }
-        }
-
-        public void ExibirDetalhesConta(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                //MessageBox.Show($"ID: {conta.Id}\nTipo de Conta: Corrente\nSaldo: {conta.Saldo}\nClienteId: {conta.ClienteId}\nData de Criação: {conta.DataCriacao}");
-            }
-            else
-            {
-                //MessageBox.Show("Conta Corrente não encontrada.");
-            }
-        }
-
-        public void BuscarPorClienteId(int clienteId)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.Where(c => c.ClienteId == clienteId && c is ContaCorrente).ToList();
-            foreach (var conta in contas)
-            {
-                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-            }
-        }
-
-        public void BuscarPorClienteId(int clienteId, out List<ContaCorrente> contasCorrente)
-        {
-            using var context = new DB_Context();
-            contasCorrente = context.Contas
-                .Where(c => c.ClienteId == clienteId && c is ContaCorrente)
-                .Cast<ContaCorrente>()
-                .ToList();
-        }
-
-        public void BuscarPorTipoConta(int ContaId)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.Where(c => c is ContaCorrente).ToList();
-            foreach (var conta in contas)
-            {
-                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-            }
-        }
-
-        public void BuscarPorSaldoMaiorQue(double saldoMinimo)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.Where(c => c is ContaCorrente && c.Saldo > saldoMinimo).ToList();
-            foreach (var conta in contas)
-            {
-                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-            }
-        }
-
-        public void BuscarPorSaldoMenorQue(double saldoMaximo)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.Where(c => c is ContaCorrente && c.Saldo < saldoMaximo).ToList();
-            foreach (var conta in contas)
-            {
-                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-            }
-        }
 
     }
 }

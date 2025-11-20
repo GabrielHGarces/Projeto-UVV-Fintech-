@@ -13,17 +13,44 @@ namespace Projeto_UVV_Fintech.Repository
         public static bool CriarConta(int clienteId)
         {
             using var context = new DB_Context();
-            Conta novo = new ContaPoupanca();
-            var clienteAssociado = context.Clientes.Find(clienteId);
-            novo.Saldo = 0;
-            novo.ClienteId = clienteId;
-            novo.Cliente = clienteAssociado;
-            Random rand = new Random();
-            novo.Agencia = rand.Next(10000, 99999); // Gera um número de agência aleatório entre 10000 e 99999
-            novo.NumeroConta = rand.Next(100000, 999999); // Gera um número de conta aleatório entre 100000 e 999999
+            int agencia =0;
+            var clienteAssociado = context.Clientes
+                .Include(c => c.Contas)
+                .FirstOrDefault(c => c.Id == clienteId);
 
-            clienteAssociado.NumeroContasCliente += 1;
+            if (clienteAssociado == null)
+                return false;
+
+            // VERIFICA SE JÁ EXISTE Uma Conta Poupança
+            foreach (var conta in clienteAssociado.Contas)
+            {
+                if (conta != null)
+                {
+                    agencia = conta.Agencia;
+                }
+
+                if (conta is ContaPoupanca)
+                    return false;
+            }
+            if (agencia == 0)
+            {
+                agencia = new Random().Next(10000, 99999);
+            }
+
+            Conta novo = new ContaPoupanca
+            {
+                Saldo = 0,
+                
+                Cliente = clienteAssociado,
+                Agencia = agencia,
+                ClienteId = clienteAssociado.Id,
+
+                NumeroConta = new Random().Next(100000, 999999),
+            };
+
+            
             clienteAssociado.Contas.Add(novo);
+
             context.Contas.Add(novo);
             context.SaveChanges();
 
@@ -36,7 +63,7 @@ namespace Projeto_UVV_Fintech.Repository
             return context.Contas.OfType<ContaPoupanca>().Include(c => c.Cliente).ToList();
         }
 
-        public static bool Depositar(Conta conta, double valor)
+        public static bool DepositarPoupanca(Conta conta, double valor)
         {
             if (conta == null)
             {
@@ -58,7 +85,7 @@ namespace Projeto_UVV_Fintech.Repository
 
         }
 
-        public static bool  Sacar(Conta conta, double valor)
+        public static bool  SacarPoupanca(Conta conta, double valor)
         {
             if (conta == null || conta.Saldo < valor)
             {
@@ -71,12 +98,12 @@ namespace Projeto_UVV_Fintech.Repository
             using var context = new DB_Context();
             context.Contas.Update(conta);
             context.SaveChanges();
-            TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, conta.Id, conta.Id, conta.Id);
+            TransacaoRepository.CriarTransacao(TipoTransacao.Saque, valor, conta.Id, conta.Id, conta.Id);
             return true;
 
         }
 
-        public static bool Transferir(Conta contaOrigem, Conta contaDestino, double valor)
+        public static bool TransferirPoupanca(Conta contaOrigem, Conta contaDestino, double valor)
         {
             if (contaOrigem == null || contaDestino == null)
                 return false;
@@ -101,7 +128,7 @@ namespace Projeto_UVV_Fintech.Repository
 
 
                 context.SaveChanges();
-                TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
+                TransacaoRepository.CriarTransacao(TipoTransacao.Transferencia, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
                 return true;
             }
 
@@ -115,7 +142,7 @@ namespace Projeto_UVV_Fintech.Repository
             IQueryable<Conta> query = context.Contas.OfType<ContaPoupanca>().Include(c => c.Cliente);
 
             if (idCliente.HasValue)
-                query = query.Where(c => c.ClienteId == idCliente.Value);
+                query = query.Where(c => c.Cliente.Id == idCliente.Value);
 
             if (numeroConta.HasValue)
                 query = query.Where(c => c.NumeroConta == numeroConta.Value);
@@ -146,147 +173,6 @@ namespace Projeto_UVV_Fintech.Repository
         }
 
 
-        public void AtualizarContaPoupanca(int contaId, double novoSaldo)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaPoupanca)
-            {
-                conta.Saldo = novoSaldo;
-                context.SaveChanges();
-            }
-            else
-            {
-                //MessageBox.Show("Conta Poupança não encontrada.");
-            }
-        }
-
-        public void DeletarContaPoupanca(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaPoupanca)
-            {
-                context.Contas.Remove(conta);
-                context.SaveChanges();
-            }
-            else
-            {
-                //MessageBox.Show("Conta Poupança não encontrada.");
-            }
-        }
-
-        public ContaPoupanca? ObterContaPorId(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaPoupanca poupanca)
-            {
-                return poupanca;
-            }
-            return null;
-        }
-
-        public List<ContaPoupanca> ObterTodasContasPoupanca()
-        {
-            using var context = new DB_Context();
-            return context.Contas.OfType<ContaPoupanca>().ToList();
-        }
-
-        public void BuscarPorId(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaPoupanca)
-            {
-                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-            }
-            else
-            {
-                //MessageBox.Show("Conta Poupança não encontrada.");
-            }
-
-        }
-
-        public void BuscarPorClienteId(int clienteId)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>().Where(c => c.ClienteId == clienteId).ToList();
-            if (contas.Any())
-            {
-                foreach (var conta in contas)
-                {
-                    //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-                }
-            }
-            else
-            {
-                //MessageBox.Show("Nenhuma Conta Poupança encontrada para este Cliente.");
-            }
-        }
-
-        public void BuscarPorTipoConta(int IdConta)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>().ToList();
-            foreach (var conta in contas)
-            {
-                //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-            }
-        }
-
-
-        public void BuscarPorSaldoMaiorQue(double saldoMinimo)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>().Where(c => c.Saldo > saldoMinimo).ToList();
-            if (contas.Any())
-            {
-                foreach (var conta in contas)
-                {
-                    //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-                }
-            }
-            else
-            {
-                //MessageBox.Show("Nenhuma Conta Poupança encontrada com saldo maior que o valor especificado.");
-            }
-        }
-
-        public void BuscarPorSaldoMenorQue(double saldoMaximo)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>().Where(c => c.Saldo < saldoMaximo).ToList();
-            if (contas.Any())
-            {
-                foreach (var conta in contas)
-                {
-                    //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-                }
-            }
-            else
-            {
-                //MessageBox.Show("Nenhuma Conta Poupança encontrada com saldo menor que o valor especificado.");
-            }
-        }
-
-        public void BuscarPorNomeCliente(string nomeCliente)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>()
-                .Where(c => c.Cliente.Nome.Contains(nomeCliente))
-                .ToList();
-            if (contas.Any())
-            {
-                foreach (var conta in contas)
-                {
-                    //MessageBox.Show($"ID: {conta.Id}, Tipo de Conta: Poupança, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-                }
-            }
-            else
-            {
-                //MessageBox.Show("Nenhuma Conta Poupança encontrada para o nome de cliente especificado.");
-            }
-        }
+        
     }
 }
