@@ -63,77 +63,113 @@ namespace Projeto_UVV_Fintech.Repository
             return context.Contas.OfType<ContaPoupanca>().Include(c => c.Cliente).ToList();
         }
 
-        public static bool DepositarPoupanca(Conta conta, double valor)
+        public static bool DepositarPoupanca(int contaId, double valor)
         {
+            using var context = new DB_Context();
+
+            var conta = context.Contas
+                .OfType<ContaPoupanca>()
+                .FirstOrDefault(c => c.Id == contaId);
+
             if (conta == null)
-            {
                 return false;
-            }
-
-
 
             conta.Saldo += valor;
-            using var context = new DB_Context();
-            context.Contas.Update(conta);
 
             context.SaveChanges();
-            TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, conta.Id, conta.Id, conta.Id);
+
+            TransacaoRepository.CriarTransacao(
+                TipoTransacao.Deposito, valor, conta.Id, conta.Id
+            );
+
             return true;
-
-
-
-
         }
 
-        public static bool  SacarPoupanca(Conta conta, double valor)
+
+        public static int ObterNumeroContaPorId(int contaId)
         {
+            using var context = new DB_Context();
+
+            var conta = context.Contas
+                .Where(c => c.Id == contaId)
+                .Select(c => c.NumeroConta)
+                .FirstOrDefault();
+
+            return conta;
+        }
+
+        public static bool SacarPoupanca(int contaId, double valor)
+        {
+            using var context = new DB_Context();
+
+            var conta = context.Contas
+                .OfType<ContaPoupanca>()
+                .FirstOrDefault(c => c.Id == contaId);
+
             if (conta == null || conta.Saldo < valor)
-            {
                 return false;
-            }
-
-
 
             conta.Saldo -= valor;
-            using var context = new DB_Context();
-            context.Contas.Update(conta);
-            context.SaveChanges();
-            TransacaoRepository.CriarTransacao(TipoTransacao.Saque, valor, conta.Id, conta.Id, conta.Id);
-            return true;
 
+            context.SaveChanges();
+
+            TransacaoRepository.CriarTransacao(
+                TipoTransacao.Saque, valor, conta.Id, conta.Id
+            );
+
+            return true;
         }
 
-        public static bool TransferirPoupanca(Conta contaOrigem, Conta contaDestino, double valor)
+        public static ContaPoupanca ObterContaPorNumero(int numeroConta)
         {
+            using var context = new DB_Context();
+
+            return context.Contas
+                .OfType<ContaPoupanca>()
+                .AsNoTracking()
+                .FirstOrDefault(c => c.NumeroConta == numeroConta);
+        }
+
+        public static bool TransferirPoupanca(int contaOrigemId, int contaDestinoId, double valor)
+        {
+            using var context = new DB_Context();
+
+            var contaOrigem = context.Contas
+                .OfType<ContaPoupanca>()
+                .AsNoTracking()
+                .FirstOrDefault(c => c.Id == contaOrigemId);
+
+            var contaDestino = context.Contas
+                .OfType<ContaPoupanca>()
+                .AsNoTracking()
+                .FirstOrDefault(c => c.Id == contaDestinoId);
+
             if (contaOrigem == null || contaDestino == null)
                 return false;
 
-
-
-
             if (contaOrigem.Saldo < valor)
-            {
-
                 return false;
-            }
-            else
-            {
-                using var context = new DB_Context();
 
-                contaOrigem.Saldo -= valor;
-                contaDestino.Saldo += valor;
+            contaOrigem.Saldo -= valor;
+            contaDestino.Saldo += valor;
 
-                context.Contas.Update(contaOrigem);
-                context.Contas.Update(contaDestino);
+            context.Attach(contaOrigem);
+            context.Attach(contaDestino);
 
+            context.Entry(contaOrigem).Property(c => c.Saldo).IsModified = true;
+            context.Entry(contaDestino).Property(c => c.Saldo).IsModified = true;
 
-                context.SaveChanges();
-                TransacaoRepository.CriarTransacao(TipoTransacao.Transferencia, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
-                return true;
-            }
+            context.SaveChanges();
 
+            TransacaoRepository.CriarTransacao(
+                TipoTransacao.Transferencia,
+                valor, contaOrigem.Id, contaDestino.Id
+            );
 
+            return true;
         }
+
+
 
 
         public static List<Conta> FiltrarContas(int? idCliente, int? numeroConta, int? numeroAgencia, string? tipoConta, string? nomeTitular, double? saldo, DateTime? dataCriacao, bool? saldoMaior, bool? dataMaior)

@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Globalization;
 using Projeto_UVV_Fintech.Banco_Dados.Entities;
 using Projeto_UVV_Fintech.Controller;
+using Projeto_UVV_Fintech.ViewModels;
 
 namespace Projeto_UVV_Fintech.Views
 {
@@ -187,9 +188,10 @@ namespace Projeto_UVV_Fintech.Views
         private void ContaRemetente_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            if (button?.DataContext is Transacao transacaoSelecionada)
+            if (button?.DataContext is TransacaoViewModel transacaoSelecionada)
             {
-                int nConta = transacaoSelecionada.ContaRemetente ?? 0;
+                int nConta = transacaoSelecionada.NumeroContaRemetente ?? 0;
+                
                 _controller.AbrirViewContas(nConta);
             }
         }
@@ -197,9 +199,9 @@ namespace Projeto_UVV_Fintech.Views
         private void ContaDestinatario_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            if (button?.DataContext is Transacao transacaoSelecionada)
+            if (button?.DataContext is TransacaoViewModel transacaoSelecionada)
             {
-                int nConta = transacaoSelecionada.ContaRemetente ?? 0;
+                int nConta = transacaoSelecionada.NumeroContaDestinatario ?? 0;
                 _controller.AbrirViewContas(nConta);
             }
         }

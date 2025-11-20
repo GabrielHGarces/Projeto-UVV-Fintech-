@@ -81,7 +81,7 @@ namespace Projeto_UVV_Fintech.Controller
             return true;
         }
 
-        public List<Cliente> ListarClientes()
+        public List<ClienteViewModel> ListarClientes()
         {
             try
             {
@@ -98,16 +98,19 @@ namespace Projeto_UVV_Fintech.Controller
                 }).ToList();
 
                 _view.TabelaClientes.ItemsSource = clienteViewModel;
-                return resultado;
+                return clienteViewModel;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao listar os clientes: {ex.Message}");
-                return new List<Cliente>();
+                return new List<ClienteViewModel>();
             }
         }
 
-        public bool FiltrarClientes(int? idCliente, string? telefone, string? cep, string? nomeCliente, int? numeroDeContas, DateTime? dataAdesao, bool? dataMaiorQue)
+
+
+
+        public List<ClienteViewModel> FiltrarClientes(int? idCliente, string? telefone, string? cep, string? nomeCliente, int? numeroDeContas, DateTime? dataAdesao, bool? dataMaiorQue)
         {
             try
             {
@@ -127,12 +130,12 @@ namespace Projeto_UVV_Fintech.Controller
 
 
                 _view.TabelaClientes.ItemsSource = clienteViewModel;
-                return true;
+                return clienteViewModel;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao filtrar os clientes: {ex.Message}");
-                return false;
+                return new List<ClienteViewModel>();
             }
         }
 

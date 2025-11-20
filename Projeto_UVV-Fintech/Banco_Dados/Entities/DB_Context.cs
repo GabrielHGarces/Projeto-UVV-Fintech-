@@ -45,11 +45,20 @@ namespace Projeto_UVV_Fintech.Banco_Dados.Entities
                 .IsRequired();
 
             // Conta → Transação (1:N)
-            modelBuilder.Entity<Conta>()
-                .HasMany(c => c.Transacoes)
-                .WithOne(t => t.Conta)
-                .HasForeignKey(t => t.ContaId)
-                .IsRequired();
+            // Conta → Transações como Remetente
+            modelBuilder.Entity<Transacao>()
+                .HasOne(t => t.ContaRemetente)
+                .WithMany()
+                .HasForeignKey(t => t.ContaRemetenteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Conta → Transações como Destinatário
+            modelBuilder.Entity<Transacao>()
+                .HasOne(t => t.ContaDestinatario)
+                .WithMany()
+                .HasForeignKey(t => t.ContaDestinatarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
 
             // 🔹 HERANÇA (TPH - Table per Hierarchy)

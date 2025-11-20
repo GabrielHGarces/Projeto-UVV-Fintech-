@@ -1,4 +1,5 @@
-﻿using Projeto_UVV_Fintech.Banco_Dados.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Projeto_UVV_Fintech.Banco_Dados.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,33 +10,59 @@ namespace Projeto_UVV_Fintech.Repository
 {
     internal class TransacaoRepository
     {
-        public static bool CriarTransacao(TipoTransacao tipo, double valor, int? contaRemetente, int? contaDestinatario, int contaId)
+        public static bool CriarTransacao(
+            TipoTransacao tipo,
+            double valor,
+            int? contaRemetenteId,
+            int? contaDestinatarioId)
         {
             using var context = new DB_Context();
-            Transacao novo = new Transacao();
-            var contaAssociada = context.Contas.Find(contaId);
-            novo.Tipo = tipo;
-            novo.Valor = valor;
-            novo.ContaRemetente = contaRemetente;
-            novo.ContaDestinatario = contaDestinatario;
-            novo.ContaId = contaId;
-            novo.Conta = contaAssociada;
-            contaAssociada.Transacoes.Add(novo);
 
-            context.Transacoes.Add(novo);
+            Conta contaRemetente = null;
+            Conta contaDestinatario = null;
+
+            if (contaRemetenteId != null)
+                contaRemetente = context.Contas.FirstOrDefault(c => c.Id == contaRemetenteId);
+
+            if (contaDestinatarioId != null)
+                contaDestinatario = context.Contas.FirstOrDefault(c => c.Id == contaDestinatarioId);
+
+            // Criar entidade final
+            var novaTransacao = new Transacao
+            {
+                Tipo = tipo,
+                Valor = valor,
+                ContaRemetenteId = contaRemetenteId,
+                ContaDestinatarioId = contaDestinatarioId,
+                ContaRemetente = contaRemetente,
+                ContaDestinatario = contaDestinatario,
+                DataHoraTransacao = DateTime.Now
+            };
+
+            context.Transacoes.Add(novaTransacao);
             context.SaveChanges();
-
             return true;
         }
 
         public static List<Transacao> ListarTransacoes()
         {
             using var context = new DB_Context();
-            return context.Transacoes.ToList();
-            
+
+            return context.Transacoes
+                .Include(t => t.ContaRemetente)
+                .Include(t => t.ContaDestinatario)
+                .ToList();
         }
 
-        public static List<Transacao> FiltrarTransacoes(int? idTransacao, int? contaRemetente, int? contaDestinatario, string? tipo, double? valor, DateTime? dataTransacao, bool? valorMaior, bool? dataMaior)
+        public static List<Transacao> FiltrarTransacoes(
+            int? idTransacao,
+            int? contaRemetente,
+            int? contaDestinatario,
+            string? tipo,
+            double? valor,
+            DateTime? dataTransacao,
+            bool? valorMaior,
+            bool? dataMaior)
         {
             var transacoes = ListarTransacoes();
 
@@ -51,8 +78,8 @@ namespace Projeto_UVV_Fintech.Repository
             var filtrado = transacoes
                 .Where(t =>
                     (idTransacao == null || t.Id == idTransacao) &&
-                    (contaRemetente == null || t.ContaRemetente == contaRemetente) &&
-                    (contaDestinatario == null || t.ContaDestinatario == contaDestinatario) &&
+                    (contaRemetente == null || t.ContaRemetenteId == contaRemetente) &&
+                    (contaDestinatario == null || t.ContaDestinatarioId == contaDestinatario) &&
                     (string.IsNullOrWhiteSpace(tipo) || tipo == "Todos" || t.Tipo.ToString().Contains(tipo, StringComparison.OrdinalIgnoreCase)) &&
                     (
                         valor == null ||
@@ -75,11 +102,5 @@ namespace Projeto_UVV_Fintech.Repository
 
             return filtrado;
         }
-
-
-
-        
-
     }
-
 }

@@ -13,9 +13,9 @@ namespace Projeto_UVV_Fintech.ViewModels
         public int ID { get; set; }
         public double valor { get; set; }
         public string tipoTransacao { get; set; }
-        public int? contaRemetente { get; set; }
-        public int? contaDestinatario { get; set; }
-        public DateTime? DataCriacao { get; set; }
+        public int? NumeroContaRemetente { get; set; }
+        public int? NumeroContaDestinatario { get; set; }
+        public DateTime? DataHoraTransacao { get; set; }
 
     }
 }

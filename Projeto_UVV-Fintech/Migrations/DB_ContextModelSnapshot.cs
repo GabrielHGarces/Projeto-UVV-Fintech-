@@ -93,13 +93,13 @@ namespace Projeto_UVV_Fintech.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ContaDestinatario")
+                    b.Property<int?>("ContaDestinatarioId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ContaId")
+                    b.Property<int?>("ContaId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ContaRemetente")
+                    b.Property<int?>("ContaRemetenteId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DataHoraTransacao")
@@ -115,7 +115,11 @@ namespace Projeto_UVV_Fintech.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContaDestinatarioId");
+
                     b.HasIndex("ContaId");
+
+                    b.HasIndex("ContaRemetenteId");
 
                     b.ToTable("Transacoes", (string)null);
                 });
@@ -154,13 +158,23 @@ namespace Projeto_UVV_Fintech.Migrations
 
             modelBuilder.Entity("Projeto_UVV_Fintech.Banco_Dados.Entities.Transacao", b =>
                 {
-                    b.HasOne("Projeto_UVV_Fintech.Banco_Dados.Entities.Conta", "Conta")
-                        .WithMany("Transacoes")
-                        .HasForeignKey("ContaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Projeto_UVV_Fintech.Banco_Dados.Entities.Conta", "ContaDestinatario")
+                        .WithMany()
+                        .HasForeignKey("ContaDestinatarioId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Conta");
+                    b.HasOne("Projeto_UVV_Fintech.Banco_Dados.Entities.Conta", null)
+                        .WithMany("Transacoes")
+                        .HasForeignKey("ContaId");
+
+                    b.HasOne("Projeto_UVV_Fintech.Banco_Dados.Entities.Conta", "ContaRemetente")
+                        .WithMany()
+                        .HasForeignKey("ContaRemetenteId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ContaDestinatario");
+
+                    b.Navigation("ContaRemetente");
                 });
 
             modelBuilder.Entity("Projeto_UVV_Fintech.Banco_Dados.Entities.Cliente", b =>

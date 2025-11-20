@@ -197,11 +197,12 @@ namespace Projeto_UVV_Fintech.Controller
                 Conta? conta = null;
                 if (tipoConta == "CC")
                 {
-                    conta = ContaCorrenteRepository.FiltrarContas(null, numConta, null, null, null, null, null, null, null).FirstOrDefault();
+                    conta = ContaCorrenteRepository.ObterContaPorNumero(numConta);
+                    
                 }
                 else if (tipoConta == "CP")
                 {
-                    conta = ContaPoupancaRepository.FiltrarContas(null, numConta, null, null, null, null, null, null, null).FirstOrDefault();
+                    conta = ContaCorrenteRepository.ObterContaPorNumero(numConta);
                 }
 
                 if (conta == null)
@@ -213,11 +214,11 @@ namespace Projeto_UVV_Fintech.Controller
                 bool sucesso = false;
                 if (tipoConta == "CC")
                 {
-                    sucesso = ContaCorrenteRepository.SacarCorrente(conta, valor);
+                    sucesso = ContaCorrenteRepository.SacarCorrente(conta.Id, valor);
                 }
                 else if (tipoConta == "CP")
                 {
-                    sucesso = ContaPoupancaRepository.SacarPoupanca(conta, valor);
+                    sucesso = ContaPoupancaRepository.SacarPoupanca(conta.Id, valor);
                 }
 
                 if (sucesso)
@@ -242,11 +243,11 @@ namespace Projeto_UVV_Fintech.Controller
                 Conta? conta = null;
                 if (tipoConta == "CC")
                 {
-                    conta = ContaCorrenteRepository.FiltrarContas(null, numConta, null, null, null, null, null, null, null).FirstOrDefault();
+                    conta = ContaCorrenteRepository.ObterContaPorNumero(numConta);
                 }
                 else if (tipoConta == "CP")
                 {
-                    conta = ContaPoupancaRepository.FiltrarContas(null, numConta, null, null, null, null, null, null, null).FirstOrDefault();
+                    conta = ContaPoupancaRepository.ObterContaPorNumero(numConta);
                 }
 
                 if (conta == null)
@@ -258,11 +259,11 @@ namespace Projeto_UVV_Fintech.Controller
                 bool sucesso = false;
                 if (tipoConta == "CC")
                 {
-                    sucesso = ContaCorrenteRepository.DepositarCorrente(conta, valor);
+                    sucesso = ContaCorrenteRepository.DepositarCorrente(conta.Id, valor);
                 }
                 else if (tipoConta == "CP")
                 {
-                    sucesso = ContaPoupancaRepository.DepositarPoupanca(conta, valor);
+                    sucesso = ContaPoupancaRepository.DepositarPoupanca(conta.Id, valor);
                 }
 
                 if (sucesso)
@@ -287,11 +288,11 @@ namespace Projeto_UVV_Fintech.Controller
                 Conta? contaOrigem = null;
                 if (tipoContaOrigem == "CC")
                 {
-                    contaOrigem = ContaCorrenteRepository.FiltrarContas(null, numContaOrigem, null, null, null, null, null, null, null).FirstOrDefault();
+                    contaOrigem = ContaCorrenteRepository.ObterContaPorNumero(numContaOrigem); 
                 }
                 else if (tipoContaOrigem == "CP")
                 {
-                    contaOrigem = ContaPoupancaRepository.FiltrarContas(null, numContaOrigem, null, null, null, null, null, null, null).FirstOrDefault();
+                    contaOrigem = ContaPoupancaRepository.ObterContaPorNumero(numContaDestino); 
                 }
 
                 if (contaOrigem == null)
@@ -312,11 +313,12 @@ namespace Projeto_UVV_Fintech.Controller
                 bool sucesso = false;
                 if (tipoContaOrigem == "CC")
                 {
-                    sucesso = ContaCorrenteRepository.TransferirCorrente(contaOrigem, contaDestino, valor);
+                    sucesso = ContaCorrenteRepository.TransferirCorrente(contaOrigem.Id, contaDestino.Id, valor);
+
                 }
                 else if (tipoContaOrigem == "CP")
                 {
-                    sucesso = ContaPoupancaRepository.TransferirPoupanca(contaOrigem, contaDestino, valor);
+                    sucesso = ContaPoupancaRepository.TransferirPoupanca(contaOrigem.Id, contaDestino.Id, valor);
                 }
 
                 if (sucesso)
