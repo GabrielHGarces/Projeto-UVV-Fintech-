@@ -13,7 +13,7 @@ using static Projeto_UVV_Fintech.Banco_Dados.Entities.Conta;
 using static Projeto_UVV_Fintech.Repository.ContaPoupancaRepository;
 using static Projeto_UVV_Fintech.Repository.ContaCorrenteRepository;
 using static Projeto_UVV_Fintech.Repository.ClienteRepository;
-
+using static Projeto_UVV_Fintech.Repository.TransacaoRepository;
 namespace Projeto_UVV_Fintech.Views
 
 
@@ -24,9 +24,7 @@ namespace Projeto_UVV_Fintech.Views
         public MainWindow()
         {
             InitializeComponent();
-            //DeletarContaPoupanca(1);
-            //DeletarContaCorrente(1);
-            //DeletarCliente(1);
+            
         }
 
         private void CenterWindowOnScreen()

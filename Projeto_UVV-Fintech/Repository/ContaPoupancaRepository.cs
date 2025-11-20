@@ -61,7 +61,7 @@ namespace Projeto_UVV_Fintech.Repository
             return context.Contas.OfType<ContaPoupanca>().Include(c => c.Cliente).ToList();
         }
 
-        public static bool Depositar(Conta conta, double valor)
+        public static bool DepositarPoupanca(Conta conta, double valor)
         {
             if (conta == null)
             {
@@ -83,7 +83,7 @@ namespace Projeto_UVV_Fintech.Repository
 
         }
 
-        public static bool  Sacar(Conta conta, double valor)
+        public static bool  SacarPoupanca(Conta conta, double valor)
         {
             if (conta == null || conta.Saldo < valor)
             {
@@ -96,12 +96,12 @@ namespace Projeto_UVV_Fintech.Repository
             using var context = new DB_Context();
             context.Contas.Update(conta);
             context.SaveChanges();
-            TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, conta.Id, conta.Id, conta.Id);
+            TransacaoRepository.CriarTransacao(TipoTransacao.Saque, valor, conta.Id, conta.Id, conta.Id);
             return true;
 
         }
 
-        public static bool Transferir(Conta contaOrigem, Conta contaDestino, double valor)
+        public static bool TransferirPoupanca(Conta contaOrigem, Conta contaDestino, double valor)
         {
             if (contaOrigem == null || contaDestino == null)
                 return false;
@@ -126,7 +126,7 @@ namespace Projeto_UVV_Fintech.Repository
 
 
                 context.SaveChanges();
-                TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
+                TransacaoRepository.CriarTransacao(TipoTransacao.Transferencia, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
                 return true;
             }
 

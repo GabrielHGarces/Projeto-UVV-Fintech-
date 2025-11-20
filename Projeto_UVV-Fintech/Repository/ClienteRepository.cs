@@ -89,7 +89,7 @@ namespace Projeto_UVV_Fintech.Repository
             }
         }
 
-        public void AtualizarCliente(int clienteId, string novoNome, DateTime dataAdesao, string novoCEP, string novoTelefone)
+        public static void AtualizarCliente(int clienteId, string novoNome, DateTime dataAdesao, string novoCEP, string novoTelefone)
         {
             using var context = new DB_Context();
             var cliente = context.Clientes.Find(clienteId);

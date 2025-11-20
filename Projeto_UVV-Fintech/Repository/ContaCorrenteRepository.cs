@@ -68,7 +68,7 @@ namespace Projeto_UVV_Fintech.Repository
             return context.Contas.OfType<ContaCorrente>().Include(c => c.Cliente).ToList();
         }
 
-        public static bool Depositar(Conta conta, double valor)
+        public static bool DepositarCorrente(Conta conta, double valor)
         {
             if (conta == null)
             {
@@ -90,7 +90,7 @@ namespace Projeto_UVV_Fintech.Repository
 
         }
 
-        public static bool Sacar(Conta conta, double valor)
+        public static bool SacarCorrente(Conta conta, double valor)
         {
             if (conta == null || conta.Saldo < valor)
             {
@@ -103,12 +103,12 @@ namespace Projeto_UVV_Fintech.Repository
             using var context = new DB_Context();
             context.Contas.Update(conta);
             context.SaveChanges();
-            TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, conta.Id, conta.Id, conta.Id);
+            TransacaoRepository.CriarTransacao(TipoTransacao.Saque, valor, conta.Id, conta.Id, conta.Id);
             return true;
             
         }
 
-        public static bool Transferir(Conta contaOrigem, Conta contaDestino, double valor)
+        public static bool TransferirCorrente(Conta contaOrigem, Conta contaDestino, double valor)
         {
             if (contaOrigem == null || contaDestino == null)
                 return false;
@@ -132,7 +132,7 @@ namespace Projeto_UVV_Fintech.Repository
 
 
                 context.SaveChanges();
-                TransacaoRepository.CriarTransacao(TipoTransacao.Deposito, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
+                TransacaoRepository.CriarTransacao(TipoTransacao.Transferencia, valor, contaOrigem.Id, contaDestino.Id, contaOrigem.Id);
                 return true;
             }
 
@@ -176,7 +176,7 @@ namespace Projeto_UVV_Fintech.Repository
         }
 
 
-        public void AtualizarContaCorrente(int contaId, double novoSaldo)
+        public static void AtualizarContaCorrente(int contaId, double novoSaldo)
         {
             using var context = new DB_Context();
             var conta = context.Contas.Find(contaId);

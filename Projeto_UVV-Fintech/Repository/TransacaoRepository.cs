@@ -69,7 +69,7 @@ namespace Projeto_UVV_Fintech.Repository
 
 
 
-        public void DeletarTransacao(int transacaoId)
+        public static void DeletarTransacao(int transacaoId)
         {
             using var context = new DB_Context();
             var transacao = context.Transacoes.Find(transacaoId);
