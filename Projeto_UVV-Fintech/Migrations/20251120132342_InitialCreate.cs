@@ -20,8 +20,7 @@ namespace Projeto_UVV_Fintech.Migrations
                     Nome = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     DataAdesao = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "date('now')"),
                     CEP = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
-                    Telefone = table.Column<string>(type: "TEXT", maxLength: 9, nullable: false),
-                    NumeroContasCliente = table.Column<int>(type: "INTEGER", nullable: false)
+                    Telefone = table.Column<string>(type: "TEXT", maxLength: 9, nullable: false)
                 },
                 constraints: table =>
                 {

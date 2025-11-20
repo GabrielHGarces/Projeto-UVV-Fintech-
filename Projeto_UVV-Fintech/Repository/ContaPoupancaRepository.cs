@@ -40,13 +40,15 @@ namespace Projeto_UVV_Fintech.Repository
             Conta novo = new ContaPoupanca
             {
                 Saldo = 0,
-                ClienteId = clienteId,
+                
                 Cliente = clienteAssociado,
                 Agencia = agencia,
+                ClienteId = clienteAssociado.Id,
+
                 NumeroConta = new Random().Next(100000, 999999),
             };
 
-            clienteAssociado.NumeroContasCliente++;
+            
             clienteAssociado.Contas.Add(novo);
 
             context.Contas.Add(novo);
@@ -140,7 +142,7 @@ namespace Projeto_UVV_Fintech.Repository
             IQueryable<Conta> query = context.Contas.OfType<ContaPoupanca>().Include(c => c.Cliente);
 
             if (idCliente.HasValue)
-                query = query.Where(c => c.ClienteId == idCliente.Value);
+                query = query.Where(c => c.Cliente.Id == idCliente.Value);
 
             if (numeroConta.HasValue)
                 query = query.Where(c => c.NumeroConta == numeroConta.Value);
@@ -171,134 +173,6 @@ namespace Projeto_UVV_Fintech.Repository
         }
 
 
-        public void AtualizarContaPoupanca(int contaId, double novoSaldo)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaPoupanca)
-            {
-                conta.Saldo = novoSaldo;
-                context.SaveChanges();
-            }
-            else
-            {
-            }
-        }
-
-        public static void DeletarContaPoupanca(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaPoupanca)
-            {
-                context.Contas.Remove(conta);
-                context.SaveChanges();
-            }
-            else
-            {
-            }
-        }
-
-        public ContaPoupanca? ObterContaPorId(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaPoupanca poupanca)
-            {
-                return poupanca;
-            }
-            return null;
-        }
-
-        public List<ContaPoupanca> ObterTodasContasPoupanca()
-        {
-            using var context = new DB_Context();
-            return context.Contas.OfType<ContaPoupanca>().ToList();
-        }
-
-        public void BuscarPorId(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaPoupanca)
-            {
-            }
-            else
-            {
-            }
-
-        }
-
-        public void BuscarPorClienteId(int clienteId)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>().Where(c => c.ClienteId == clienteId).ToList();
-            if (contas.Any())
-            {
-                foreach (var conta in contas)
-                {
-                }
-            }
-            else
-            {
-            }
-        }
-
-        public void BuscarPorTipoConta(int IdConta)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>().ToList();
-            foreach (var conta in contas)
-            {
-            }
-        }
-
-
-        public void BuscarPorSaldoMaiorQue(double saldoMinimo)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>().Where(c => c.Saldo > saldoMinimo).ToList();
-            if (contas.Any())
-            {
-                foreach (var conta in contas)
-                {
-                }
-            }
-            else
-            {
-            }
-        }
-
-        public void BuscarPorSaldoMenorQue(double saldoMaximo)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>().Where(c => c.Saldo < saldoMaximo).ToList();
-            if (contas.Any())
-            {
-                foreach (var conta in contas)
-                {
-                }
-            }
-            else
-            {
-            }
-        }
-
-        public void BuscarPorNomeCliente(string nomeCliente)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.OfType<ContaPoupanca>()
-                .Where(c => c.Cliente.Nome.Contains(nomeCliente))
-                .ToList();
-            if (contas.Any())
-            {
-                foreach (var conta in contas)
-                {
-                }
-            }
-            else
-            {
-            }
-        }
+        
     }
 }

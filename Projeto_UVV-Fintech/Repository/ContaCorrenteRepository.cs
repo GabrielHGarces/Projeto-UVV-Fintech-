@@ -20,7 +20,7 @@ namespace Projeto_UVV_Fintech.Repository
             var clienteAssociado = context.Clientes
                 .Include(c => c.Contas)
                 .FirstOrDefault(c => c.Id == clienteId);
-
+            
             if (clienteAssociado == null)
                 return false;
 
@@ -42,17 +42,16 @@ namespace Projeto_UVV_Fintech.Repository
             Conta novo = new ContaCorrente
             {
                 Saldo = 0,
-                ClienteId = clienteId,
                 Cliente = clienteAssociado,
                 
-               
+               ClienteId = clienteAssociado.Id,
                 Agencia = agencia,
                 
 
                 NumeroConta = new Random().Next(100000, 999999),
             };
 
-            clienteAssociado.NumeroContasCliente++;
+            
             clienteAssociado.Contas.Add(novo);
 
             context.Contas.Add(novo);
@@ -145,7 +144,7 @@ namespace Projeto_UVV_Fintech.Repository
             IQueryable<Conta> query = context.Contas.OfType<ContaCorrente>().Include(c => c.Cliente);
 
             if (idCliente.HasValue)
-                query = query.Where(c => c.ClienteId == idCliente.Value);
+                query = query.Where(c => c.Cliente.Id== idCliente.Value);
 
             if (numeroConta.HasValue)
                 query = query.Where(c => c.NumeroConta == numeroConta.Value);
@@ -176,118 +175,7 @@ namespace Projeto_UVV_Fintech.Repository
         }
 
 
-        public static void AtualizarContaCorrente(int contaId, double novoSaldo)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                conta.Saldo = novoSaldo;
-                context.SaveChanges();
-            }
-            else
-            {
-            }
-        }
         
-        public static void DeletarContaCorrente(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                context.Contas.Remove(conta);
-                context.SaveChanges();
-            }
-            else
-            {
-            }
-        }
-
-        public double ObterSaldo(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                return conta.Saldo;
-            }
-            else
-            {
-                return 0.0;
-            }
-        }
-
-        public void AtualizarSaldo(int contaId, double novoSaldo)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-                conta.Saldo = novoSaldo;
-                context.SaveChanges();
-            }
-            else
-            {
-            }
-        }
-
-        public void ExibirDetalhesConta(int contaId)
-        {
-            using var context = new DB_Context();
-            var conta = context.Contas.Find(contaId);
-            if (conta != null && conta is ContaCorrente)
-            {
-            }
-            else
-            {
-            }
-        }
-
-        public void BuscarPorClienteId(int clienteId)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.Where(c => c.ClienteId == clienteId && c is ContaCorrente).ToList();
-            foreach (var conta in contas)
-            {
-            }
-        }
-
-        public void BuscarPorClienteId(int clienteId, out List<ContaCorrente> contasCorrente)
-        {
-            using var context = new DB_Context();
-            contasCorrente = context.Contas
-                .Where(c => c.ClienteId == clienteId && c is ContaCorrente)
-                .Cast<ContaCorrente>()
-                .ToList();
-        }
-
-        public void BuscarPorTipoConta(int ContaId)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.Where(c => c is ContaCorrente).ToList();
-            foreach (var conta in contas)
-            {
-            }
-        }
-
-        public void BuscarPorSaldoMaiorQue(double saldoMinimo)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.Where(c => c is ContaCorrente && c.Saldo > saldoMinimo).ToList();
-            foreach (var conta in contas)
-            {
-            }
-        }
-
-        public void BuscarPorSaldoMenorQue(double saldoMaximo)
-        {
-            using var context = new DB_Context();
-            var contas = context.Contas.Where(c => c is ContaCorrente && c.Saldo < saldoMaximo).ToList();
-            foreach (var conta in contas)
-            {
-            }
-        }
 
     }
 }
