@@ -38,9 +38,8 @@ namespace Projeto_UVV_Fintech.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("NumeroContasCliente")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("NumeroContasCliente")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Telefone")
                         .IsRequired()

@@ -94,12 +94,12 @@
                     </Style>
                 </DataGrid.CellStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Cliente" Binding="{Binding IdCliente}" Width="0.7*" />
+                    <DataGridTextColumn Header="ID Cliente" Binding="{Binding ClienteId}" Width="0.7*" />
                     <DataGridTextColumn Header="Agencia" Binding="{Binding Agencia}" Width="0.7*" />
                     <DataGridTemplateColumn Header="Numero da conta" Width="1.3*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="NumeroContaButton" Content="{Binding NumConta}"
+                                <Button x:Name="NumeroContaButton" Content="{Binding NumeroConta}"
                                 Padding="0"
                                 Foreground="Black"
                                 HorizontalAlignment="Stretch"
@@ -108,12 +108,12 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="0.5*" />
-                    <DataGridTextColumn Header="Data de Adesão" Binding="{Binding DataDeAdesao, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="1.5*" />
+                    <DataGridTextColumn Header="Data de Criação" Binding="{Binding DataCriacao, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="1.5*" />
                     <DataGridTextColumn Header="Saldo" Binding="{Binding Saldo, StringFormat={}{0:C}, ConverterCulture=pt-BR}" Width="1.3*" />
                     <DataGridTemplateColumn Header="Nome Do Cliente" Width="3.5*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="NameTableButton" Content="{Binding Nome}"
+                                <Button x:Name="NameTableButton" Content="{Binding NomeCliente}"
                                     Padding="0"
                                     Foreground="Black"
                                     HorizontalAlignment="Stretch"

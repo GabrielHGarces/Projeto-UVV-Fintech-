@@ -1,4 +1,5 @@
 ﻿using Projeto_UVV_Fintech.Banco_Dados.Entities;
+using Projeto_UVV_Fintech.ViewModels;
 using Projeto_UVV_Fintech.Controller;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace Projeto_UVV_Fintech.Views
         {
             InitializeComponent();
             contaController = new ContaController(this);
-            TabelaContas.ItemsSource = contaController.ListarContas();
+            contaController.ListarContas();
         }
 
         public ViewContas(int nConta)
@@ -46,7 +47,7 @@ namespace Projeto_UVV_Fintech.Views
             NConta.Text = nConta.ToString();
             numeroConta = nConta;
 
-            TabelaContas.ItemsSource = contaController.ListarContas();
+            contaController.ListarContas();
             PerformSearch();
         }
         public ViewContas(Cliente clienteSelecionado)
@@ -56,7 +57,7 @@ namespace Projeto_UVV_Fintech.Views
 
             ClienteID.Text = clienteSelecionado.Id.ToString();
 
-            TabelaContas.ItemsSource = contaController.ListarContas();
+            contaController.ListarContas();
             PerformSearch();
         }
 
@@ -174,7 +175,7 @@ namespace Projeto_UVV_Fintech.Views
 
         private void PerformSearch()
         {
-            TabelaContas.ItemsSource = contaController.FiltrarContas(
+            contaController.FiltrarContas(
                 ClienteID.Text, numeroConta, numeroAgencia, tipoConta,
                 nomeTitular, saldo != 0 ? saldo : (double?)null,
                 dataSelecionada, saldoMaiorQue, dataMaiorQue);
@@ -222,7 +223,7 @@ namespace Projeto_UVV_Fintech.Views
             Button button = sender as Button;
             if (button == null) return;
 
-            Conta contaSelecionada = button.DataContext as Conta;
+            ContaViewModel contaSelecionada = button.DataContext as ContaViewModel;
             if (contaSelecionada != null)
             {
                 contaController.AbrirViewClientes(contaSelecionada);

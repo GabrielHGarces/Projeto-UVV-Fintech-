@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Projeto_UVV_Fintech.Banco_Dados.Entities;
 using Projeto_UVV_Fintech.Repository;
+using Projeto_UVV_Fintech.ViewModels;
 using Projeto_UVV_Fintech.Views;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using static Projeto_UVV_Fintech.Views.ContaTransacaoDialog;
 
 namespace Projeto_UVV_Fintech.Controller
 {
@@ -93,35 +96,55 @@ namespace Projeto_UVV_Fintech.Controller
             }
         }
 
-        public List<Conta> ListarContas()
+        public void ListarContas()
         {
             try
             {
-                List<Conta> resultadoPoupanca = ContaPoupancaRepository.ListarContas();
-                List<Conta> resultadoCorrente = ContaCorrenteRepository.ListarContas();
+                List<Conta> Contas = [];
+                List<ContaPoupanca> resultadoPoupanca = ContaPoupancaRepository.ListarContas();
+                List<ContaCorrente> resultadoCorrente = ContaCorrenteRepository.ListarContas();
 
-                var todasContas = resultadoPoupanca.Concat(resultadoCorrente);
+                var todasContas = Contas.Concat(resultadoPoupanca).Concat(resultadoCorrente);
                 var contasUnicas = todasContas
                     .GroupBy(c => c.Id)
                     .Select(g => g.First())
                     .ToList();
+                
+                var contasViewModel = contasUnicas.Select(conta => new ContaViewModel
+                {
+                     ClienteId = conta.ClienteId,
+                     Agencia = conta.Agencia,
+                     NumeroConta = conta.NumeroConta,
+                     Tipo = conta.GetType().Name == "ContaCorrente" ? "CC" : "CP",
+                     DataCriacao = conta.DataCriacao,
+                     Saldo = conta.Saldo,
+                     NomeCliente = GetNomeClientePorId(conta.ClienteId.ToString())
+                }).ToList();
 
-                _view.TabelaContas.ItemsSource = contasUnicas;
-                return contasUnicas;
+                _view.TabelaContas.ItemsSource = contasViewModel;
             } catch (Exception ex)
             {
                 MessageBox.Show("Erro ao listar contas: " + ex.Message);
-                return [];
             }
         }
 
-        public List<Conta> FiltrarContas(string? IdCliente, int? numerConta, int? numeroAgencia, string? tipoConta, string? nomeTitular, double? saldo, DateTime? dataCriacao, bool? saldoMaior, bool? dataMaior)
+        public List<ContaViewModel> FiltrarContas(string? IdCliente, int? numerConta, int? numeroAgencia, string? tipoConta, string? nomeTitular, double? saldo, DateTime? dataCriacao, bool? saldoMaior, bool? dataMaior)
         {
             try
             {
-                if (!int.TryParse(IdCliente, out int idClienteInt))
+                int? idClienteInt = null;
+                if (!string.IsNullOrEmpty(IdCliente))
                 {
-                    return new List<Conta>();
+                    if (int.TryParse(IdCliente, out int parsedId))
+                    {
+                        idClienteInt = parsedId;
+                    }
+                    else
+                    {
+                        // Se o ID não for um número válido, limpa a grade e retorna.
+                        _view.TabelaContas.ItemsSource = new List<ContaViewModel>();
+                        return new List<ContaViewModel>();
+                    }
                 }
 
                 List<Conta> resultado;
@@ -146,11 +169,23 @@ namespace Projeto_UVV_Fintech.Controller
                     resultado = resultadoPoupanca.Concat(resultadoCorrente).ToList();
                 }
 
-                return resultado;
+                var contasViewModel = resultado.Select(conta => new ContaViewModel
+                {
+                    ClienteId = conta.ClienteId,
+                    Agencia = conta.Agencia,
+                    NumeroConta = conta.NumeroConta,
+                    Tipo = conta.GetType().Name == "ContaCorrente" ? "CC" : "CP",
+                    DataCriacao = conta.DataCriacao,
+                    Saldo = conta.Saldo,
+                    NomeCliente = GetNomeClientePorId(conta.ClienteId.ToString())
+                }).ToList();
+
+                _view.TabelaContas.ItemsSource = contasViewModel;
+                return contasViewModel;
             } catch (Exception ex)
             {
                 MessageBox.Show("Erro ao filtrar contas: " + ex.Message);
-                return [];
+                return new List<ContaViewModel>();
             }
             
         }
@@ -195,10 +230,10 @@ namespace Projeto_UVV_Fintech.Controller
             return string.Empty;
         }
 
-        public void AbrirViewClientes(Conta contaSelecionada)
+        public void AbrirViewClientes(ContaViewModel contaSelecionada)
         {
             _view.Hide();
-            var window = new ViewClientes(contaSelecionada.Id) { Owner = _view };
+            var window = new ViewClientes(contaSelecionada.ClienteId) { Owner = _view };
             window.ShowDialog();
             _view.Close();
         }
@@ -206,7 +241,7 @@ namespace Projeto_UVV_Fintech.Controller
         public void AbrirViewTransacoes(string NumConta)
         {
             _view.Opacity = 0.5;
-            var dialog = new ContaTransacaoDialog(int.Parse(NumConta)) { Owner = _view };
+            var dialog = new ContaTransacaoDialog(int.Parse(NumConta), this) { Owner = _view };
             bool? resultado = dialog.ShowDialog();
             _view.Opacity = 1;
         }

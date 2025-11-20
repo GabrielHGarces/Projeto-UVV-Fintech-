@@ -1,4 +1,5 @@
-﻿using Projeto_UVV_Fintech.Banco_Dados.Entities;
+using Microsoft.EntityFrameworkCore;
+using Projeto_UVV_Fintech.Banco_Dados.Entities;
 using Projeto_UVV_Fintech.Repository;
 using System;
 using System.Collections.Generic;
@@ -35,16 +36,10 @@ namespace Projeto_UVV_Fintech.Repository
             return true;
         }
 
-        public static List<Conta> ListarContas()
+        public static List<ContaCorrente> ListarContas()
         {
             using var context = new DB_Context();
-            return context.Contas.ToList(); // Ele retorna somente as contas correntes?
-
-            //foreach (var conta in contas)
-            //{
-            //    MessageBox.Show($"ID: {conta.Id},Tipo de Conta: Corrente, Saldo: {conta.Saldo}, ClienteId: {conta.ClienteId}, Data de Criação: {conta.DataCriacao}");
-
-            //}
+            return context.Contas.OfType<ContaCorrente>().Include(c => c.Cliente).ToList();
         }
 
         public static bool Depositar(Conta conta, double valor)
@@ -117,53 +112,41 @@ namespace Projeto_UVV_Fintech.Repository
 
             
         }
-
-
-
-        public static List<Conta> FiltrarContas(int? idCliente,int? numeroConta,int? numeroAgencia,string? tipoConta,string? nomeTitular,double? saldo,DateTime? dataCriacao,bool? saldoMaior,bool? dataMaior)
+        
+        public static List<Conta> FiltrarContas(int? idCliente, int? numeroConta, int? numeroAgencia, string? tipoConta, string? nomeTitular, double? saldo, DateTime? dataCriacao, bool? saldoMaior, bool? dataMaior)
         {
-            // Busca todas as contas do BD
-            var contas = ListarContas();
+            using var context = new DB_Context();
+            IQueryable<Conta> query = context.Contas.OfType<ContaCorrente>().Include(c => c.Cliente);
 
-            var filtrado = contas
-                .Where(c =>
-                    // ID do Cliente
-                    (idCliente == null || c.ClienteId == idCliente)
+            if (idCliente.HasValue)
+                query = query.Where(c => c.ClienteId == idCliente.Value);
 
-                    // Número da conta
-                    && (numeroConta == null || c.NumeroConta == numeroConta)
+            if (numeroConta.HasValue)
+                query = query.Where(c => c.NumeroConta == numeroConta.Value);
 
-                    // Número da agência
-                    && (numeroAgencia == null || c.Agencia == numeroAgencia)
+            if (numeroAgencia.HasValue)
+                query = query.Where(c => c.Agencia == numeroAgencia.Value);
 
-                    && (nomeTitular == null ||
-                        (!string.IsNullOrWhiteSpace(c.Cliente.Nome) && c.Cliente.Nome.Contains(nomeTitular, StringComparison.OrdinalIgnoreCase))
-                    )
+            if (!string.IsNullOrWhiteSpace(nomeTitular))
+                query = query.Where(c => c.Cliente.Nome.ToUpper().Contains(nomeTitular.ToUpper()));
 
+            if (saldo.HasValue)
+            {
+                if (saldoMaior == true)
+                    query = query.Where(c => c.Saldo >= saldo.Value);
+                else
+                    query = query.Where(c => c.Saldo <= saldo.Value);
+            }
 
-                    // Saldo
-                    && (
-                        saldo == null ||
-                        (
-                            saldoMaior == true ? c.Saldo >= saldo :
-                            saldoMaior == false ? c.Saldo <= saldo :
-                            true
-                        )
-                    )
+            if (dataCriacao.HasValue)
+            {
+                if (dataMaior == true)
+                    query = query.Where(c => c.DataCriacao >= dataCriacao.Value);
+                else
+                    query = query.Where(c => c.DataCriacao <= dataCriacao.Value);
+            }
 
-                    // Data de criação
-                    && (
-                        dataCriacao == null ||
-                        (
-                            dataMaior == true ? c.DataCriacao >= dataCriacao :
-                            dataMaior == false ? c.DataCriacao <= dataCriacao :
-                            true
-                        )
-                    )
-                )
-                .ToList();
-
-            return filtrado;
+            return query.ToList();
         }
 
 

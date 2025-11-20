@@ -83,12 +83,12 @@
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="0.5*" />
                     <DataGridTextColumn Header="Nome Do Cliente" Binding="{Binding Nome}" Width="3.5*" />
                     <DataGridTextColumn Header="Telefone" Binding="{Binding Telefone}" Width="2*" />
-                    <DataGridTextColumn Header="CEP" Binding="{Binding Cep}" Width="2*" />
-                    <DataGridTextColumn Header="Data de Adesão" Binding="{Binding DataDeAdesao, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="2*" />
+                    <DataGridTextColumn Header="CEP" Binding="{Binding CEP}" Width="2*" />
+                    <DataGridTextColumn Header="Data de Adesão" Binding="{Binding DataAdesao, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="2*" />
                     <DataGridTemplateColumn Header="Nº de Contas" Width="1.2*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="NumeroDeContas" Content="{Binding NumeroDeContas}"
+                                <Button x:Name="NumeroDeContas" Content="{Binding NumeroContasCliente}"
                                 Padding="0"
                                 Foreground="Black"
                                 HorizontalAlignment="Stretch"

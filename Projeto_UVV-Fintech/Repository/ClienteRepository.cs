@@ -18,6 +18,7 @@ namespace Projeto_UVV_Fintech.Repository
             CliNovo.Nome = name;
             CliNovo.Telefone = telefone;
             CliNovo.CEP = cEP;
+            CliNovo.NumeroContasCliente = 0;
 
             context.Clientes.Add(CliNovo);
             context.SaveChanges();
@@ -54,7 +55,7 @@ namespace Projeto_UVV_Fintech.Repository
 
                     // Filtra por número de contas
                     && (numeroDeContas == null ||
-                        c.Contas?.Count == numeroDeContas)
+                        c.NumeroContasCliente == numeroDeContas)
 
                     // Filtra por data de adesão (opcional)
                     && (
