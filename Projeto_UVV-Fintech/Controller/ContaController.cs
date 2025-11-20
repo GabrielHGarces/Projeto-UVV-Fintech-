@@ -213,11 +213,11 @@ namespace Projeto_UVV_Fintech.Controller
                 bool sucesso = false;
                 if (tipoConta == "CC")
                 {
-                    sucesso = ContaCorrenteRepository.Sacar(conta, valor);
+                    sucesso = ContaCorrenteRepository.SacarCorrente(conta, valor);
                 }
                 else if (tipoConta == "CP")
                 {
-                    sucesso = ContaPoupancaRepository.Sacar(conta, valor);
+                    sucesso = ContaPoupancaRepository.SacarPoupanca(conta, valor);
                 }
 
                 if (sucesso)
@@ -258,11 +258,11 @@ namespace Projeto_UVV_Fintech.Controller
                 bool sucesso = false;
                 if (tipoConta == "CC")
                 {
-                    sucesso = ContaCorrenteRepository.Depositar(conta, valor);
+                    sucesso = ContaCorrenteRepository.DepositarCorrente(conta, valor);
                 }
                 else if (tipoConta == "CP")
                 {
-                    sucesso = ContaPoupancaRepository.Depositar(conta, valor);
+                    sucesso = ContaPoupancaRepository.DepositarPoupanca(conta, valor);
                 }
 
                 if (sucesso)
@@ -312,11 +312,11 @@ namespace Projeto_UVV_Fintech.Controller
                 bool sucesso = false;
                 if (tipoContaOrigem == "CC")
                 {
-                    sucesso = ContaCorrenteRepository.Transferir(contaOrigem, contaDestino, valor);
+                    sucesso = ContaCorrenteRepository.TransferirCorrente(contaOrigem, contaDestino, valor);
                 }
                 else if (tipoContaOrigem == "CP")
                 {
-                    sucesso = ContaPoupancaRepository.Transferir(contaOrigem, contaDestino, valor);
+                    sucesso = ContaPoupancaRepository.TransferirPoupanca(contaOrigem, contaDestino, valor);
                 }
 
                 if (sucesso)
