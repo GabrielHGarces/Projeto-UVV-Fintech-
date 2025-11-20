@@ -80,8 +80,8 @@
                     </Style>
                 </DataGrid.CellStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="0.5*" />
-                    <DataGridTextColumn Header="Nome Do Cliente" Binding="{Binding Nome}" Width="3.5*" />
+                    <DataGridTextColumn Header="ID" Binding="{Binding ClientId}" Width="0.5*" />
+                    <DataGridTextColumn Header="Nome Do Cliente" Binding="{Binding NomeCliente}" Width="3.5*" />
                     <DataGridTextColumn Header="Telefone" Binding="{Binding Telefone}" Width="2*" />
                     <DataGridTextColumn Header="CEP" Binding="{Binding CEP}" Width="2*" />
                     <DataGridTextColumn Header="Data de Adesão" Binding="{Binding DataAdesao, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="2*" />

@@ -60,20 +60,31 @@ namespace Projeto_UVV_Fintech.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Tipo = table.Column<int>(type: "INTEGER", nullable: false),
                     Valor = table.Column<double>(type: "REAL", nullable: false),
-                    ContaRemetente = table.Column<int>(type: "INTEGER", nullable: false),
-                    ContaDestinatario = table.Column<int>(type: "INTEGER", nullable: false),
+                    ContaRemetenteId = table.Column<int>(type: "INTEGER", nullable: true),
+                    ContaDestinatarioId = table.Column<int>(type: "INTEGER", nullable: true),
                     DataHoraTransacao = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    ContaId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ContaId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Transacoes", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Transacoes_Contas_ContaDestinatarioId",
+                        column: x => x.ContaDestinatarioId,
+                        principalTable: "Contas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Transacoes_Contas_ContaId",
                         column: x => x.ContaId,
                         principalTable: "Contas",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Transacoes_Contas_ContaRemetenteId",
+                        column: x => x.ContaRemetenteId,
+                        principalTable: "Contas",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -82,9 +93,19 @@ namespace Projeto_UVV_Fintech.Migrations
                 column: "ClienteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Transacoes_ContaDestinatarioId",
+                table: "Transacoes",
+                column: "ContaDestinatarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transacoes_ContaId",
                 table: "Transacoes",
                 column: "ContaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transacoes_ContaRemetenteId",
+                table: "Transacoes",
+                column: "ContaRemetenteId");
         }
 
         /// <inheritdoc />

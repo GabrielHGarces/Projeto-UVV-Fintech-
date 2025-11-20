@@ -8,10 +8,10 @@ namespace Projeto_UVV_Fintech.ViewModels
 {
     public class ClienteViewModel
     {
-        public int ClientID { get; set; }
-        public string ClientName { get; set; }
+        public int ClientId { get; set; }
+        public string NomeCliente { get; set; }
         public string Telefone { get; set; } 
-        public string Cep { get; set; } 
+        public string CEP { get; set; } 
        
         
         public DateTime? DataAdesao { get; set; }

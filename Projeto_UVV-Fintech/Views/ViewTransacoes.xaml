@@ -86,14 +86,14 @@
                     </Style>
                 </DataGrid.CellStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="0.5*" />
-                    <DataGridTextColumn Header="Valor" Binding="{Binding Valor, StringFormat={}{0:C}, ConverterCulture=pt-BR}" Width="1.5*" />
-                    <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="1.5*" />
+                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="0.5*" />
+                    <DataGridTextColumn Header="Valor" Binding="{Binding valor, StringFormat={}{0:C}, ConverterCulture=pt-BR}" Width="1.5*" />
+                    <DataGridTextColumn Header="Tipo" Binding="{Binding tipoTransacao}" Width="1.5*" />
                     <DataGridTextColumn Header="Data e Hora" Binding="{Binding DataHoraTransacao, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="2*" />
                     <DataGridTemplateColumn Header="Conta Remetente" Width="2*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="ContaRemetente" Content="{Binding ContaRemetente}"
+                                <Button x:Name="ContaRemetente" Content="{Binding NumeroContaRemetente}"
                                     Padding="0"
                                     Foreground="Black"
                                     HorizontalAlignment="Stretch"
@@ -105,7 +105,7 @@
                     <DataGridTemplateColumn Header="Conta Destinatário" Width="2*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="ContaDestinatario" Content="{Binding ContaDestinatario}"
+                                <Button x:Name="ContaDestinatario" Content="{Binding NumeroContaDestinatario}"
                                     Padding="0"
                                     Foreground="Black"
                                     HorizontalAlignment="Stretch"

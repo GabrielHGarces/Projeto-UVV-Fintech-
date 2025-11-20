@@ -1,6 +1,7 @@
 ﻿//using Projeto_UVV_Fintech.Model;
 using Projeto_UVV_Fintech.Banco_Dados.Entities;
 using Projeto_UVV_Fintech.Repository;
+using Projeto_UVV_Fintech.ViewModels;
 using Projeto_UVV_Fintech.Views;
 using System;
 using System.Collections.Generic;
@@ -80,36 +81,51 @@ namespace Projeto_UVV_Fintech.Controller
             return true;
         }
 
-        public List<Cliente> ListarClientes()
+        public List<ClienteViewModel> ListarClientes()
         {
-            try
+            List<Cliente> clientes = ClienteRepository.ListarClientes();
+
+            var clientesViewModel = clientes.Select(cliente => new ClienteViewModel
             {
-                List<Cliente> resultado = ClienteRepository.ListarClientes();
-                _view.TabelaClientes.ItemsSource = resultado;
-                return resultado;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao listar os clientes: {ex.Message}");
-                return new List<Cliente>();
-            }
+                ClientId = cliente.Id,
+                NomeCliente = cliente.Nome,
+                Telefone = cliente.Telefone,
+                CEP = cliente.CEP,
+                DataAdesao = cliente.DataAdesao,
+                NumeroContas = cliente.Contas?.Count ?? 0
+            }).ToList();
+
+            return clientesViewModel;
         }
 
-        public bool FiltrarClientes(int? idCliente, string? telefone, string? cep, string? nomeCliente, int? numeroDeContas, DateTime? dataAdesao, bool? dataMaiorQue)
+
+
+        public List<ClienteViewModel> FiltrarClientes(int? idCliente, string? telefone, string? cep, string? nomeCliente, int? numeroDeContas, DateTime? dataAdesao, bool? dataMaiorQue)
         {
             try
             {
-                List<Cliente> resultado = ClienteRepository.FiltrarClientes(
+                List<Cliente> clientes = ClienteRepository.FiltrarClientes(
                 idCliente, telefone, cep, nomeCliente,
                 numeroDeContas, dataAdesao, dataMaiorQue);
 
-                _view.TabelaClientes.ItemsSource = resultado;
-                return true;
+
+                var clientesViewModel = clientes.Select(cliente => new ClienteViewModel
+                {
+                    ClientId = cliente.Id,
+                    NomeCliente = cliente.Nome,
+                    Telefone = cliente.Telefone,
+                    CEP = cliente.CEP,
+                    DataAdesao = cliente.DataAdesao,
+                    NumeroContas = cliente.Contas?.Count ?? 0
+                }).ToList();
+
+                return clientesViewModel;
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao filtrar os clientes: {ex.Message}");
-                return false;
+                return new List<ClienteViewModel>();
             }
         }
 

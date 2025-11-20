@@ -1,11 +1,12 @@
-﻿using Projeto_UVV_Fintech.Views;
-using Projeto_UVV_Fintech.Banco_Dados.Entities;
+﻿using Projeto_UVV_Fintech.Banco_Dados.Entities;
+using Projeto_UVV_Fintech.Repository;
+using Projeto_UVV_Fintech.ViewModels;
+using Projeto_UVV_Fintech.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Projeto_UVV_Fintech.Repository;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -38,34 +39,68 @@ namespace Projeto_UVV_Fintech.Controller
             }
         }
 
-        public List<Transacao> ListarTransacoes()
+        public List<TransacaoViewModel> ListarTransacoes()
         {
             try
             {
-                List<Transacao> transacoes = TransacaoRepository.ListarTransacoes();
-                _view.TabelaTransacoes.ItemsSource = transacoes;
-                return transacoes;
-            } catch (Exception ex)
+                var transacoes = TransacaoRepository.ListarTransacoes();
+
+                var transacoesViewModel = transacoes.Select(t => new TransacaoViewModel
+                {
+                    ID = t.Id,
+                    valor = t.Valor,
+                    tipoTransacao = t.Tipo.ToString(),
+
+                    NumeroContaRemetente = t.ContaRemetente != null
+                        ? t.ContaRemetente.NumeroConta
+                        : 1,
+
+                    NumeroContaDestinatario = t.ContaDestinatario != null
+                        ? t.ContaDestinatario.NumeroConta
+                        : 0,
+
+                    DataHoraTransacao = t.DataHoraTransacao
+                }).ToList();
+
+                _view.TabelaTransacoes.ItemsSource = transacoesViewModel;
+                return transacoesViewModel;
+            }
+            catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao listar transacoes: {ex.Message}");
-                return new List<Transacao>();
+                MessageBox.Show($"Erro ao listar transações: {ex.Message}");
+                return new List<TransacaoViewModel>();
             }
         }
 
-        public bool FiltrarTransacoes(int? idTransacao, int? contaRemetente, int? contaDestinatario, string? tipo, double? valor, DateTime? dataTransacao, bool? valorMaior, bool? dataMaior)
+
+
+
+
+        public List<TransacaoViewModel> FiltrarTransacoes(int? idTransacao, int? contaRemetente, int? contaDestinatario, string? tipo, double? valor, DateTime? dataTransacao, bool? valorMaior, bool? dataMaior)
         {
             try
             {
                 List<Transacao> filtrado = TransacaoRepository.FiltrarTransacoes(
                 idTransacao, contaRemetente, contaDestinatario,
                 tipo, valor, dataTransacao, valorMaior, dataMaior);
+                var transacoesViewModel = filtrado.Select(t => new TransacaoViewModel
+                {
+                    ID = t.Id,
+                    valor = t.Valor,
+                    tipoTransacao = t.Tipo.ToString(),
 
-                _view.TabelaTransacoes.ItemsSource = filtrado;
-                return true;
+                    NumeroContaRemetente = t.ContaRemetente?.NumeroConta ?? 0,
+                    NumeroContaDestinatario = t.ContaDestinatario?.NumeroConta ?? 0,
+
+                    DataHoraTransacao = t.DataHoraTransacao
+                }).ToList();
+
+                _view.TabelaTransacoes.ItemsSource = transacoesViewModel;
+                return transacoesViewModel;
             } catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao filtrar transacoes: {ex.Message}");
-                return false;
+                return new List <TransacaoViewModel>();
             }
         }
 

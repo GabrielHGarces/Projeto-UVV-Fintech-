@@ -21,47 +21,27 @@ namespace Projeto_UVV_Fintech.Banco_Dados.Entities
         public int Id { get; set; }
 
         [Required]
-        public TipoTransacao Tipo { get; set; } 
+        public TipoTransacao Tipo { get; set; }
 
         [Required]
         public double Valor { get; set; }
 
+        // Conta que envia
+        public int? ContaRemetenteId { get; set; }
+        [ForeignKey(nameof(ContaRemetenteId))]
+        public Conta ContaRemetente { get; set; }
+
+        
+        // Conta que recebe
+        public int? ContaDestinatarioId { get; set; }
+        [ForeignKey(nameof(ContaDestinatarioId))]
+        public Conta ContaDestinatario { get; set; }
+
         [Required]
-        //Conta que enviou
-        public int? ContaRemetente { get; set; }
-
-
-
-        [Required]
-        //Conta que recebeu
-        public int? ContaDestinatario { get; set; }
-
-        // Campo para armazenar a data de criação
-        [Required]
-        [DataType(DataType.DateTime)]
-        [Display(Name = "Data/Hora Transacao")]
         public DateTime DataHoraTransacao { get; set; }
 
-
-
-
-
-        // 1:N Recebe a PK da Conta
-        [ForeignKey("Conta")]
-        public int ContaId { get; set; }
-
-        // 👇 Propriedade de navegação (referência à Categoria)
-        public Conta Conta { get; set; } = null!;
         public Transacao() { }
-        public Transacao( TipoTransacao tipo, double valor, int? contaDestinatario, int? contaRemetente, int contaId)
-        {
-            
-            Tipo = tipo;
-            Valor = valor;
-            ContaDestinatario = contaDestinatario ;
-            ContaRemetente = contaRemetente;
-            ContaId = contaId;
-            
-        }
     }
+
 }
+
