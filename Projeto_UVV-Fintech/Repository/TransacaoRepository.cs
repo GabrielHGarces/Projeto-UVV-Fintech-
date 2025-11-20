@@ -55,32 +55,44 @@ namespace Projeto_UVV_Fintech.Repository
         }
 
         public static List<Transacao> FiltrarTransacoes(
-            int? idTransacao,
-            int? contaRemetente,
-            int? contaDestinatario,
-            string? tipo,
-            double? valor,
-            DateTime? dataTransacao,
-            bool? valorMaior,
-            bool? dataMaior)
+    int? idTransacao,
+    int? contaRemetente,
+    int? contaDestinatario,
+    string? tipo,
+    double? valor,
+    DateTime? dataTransacao,
+    bool? valorMaior,
+    bool? dataMaior)
         {
             var transacoes = ListarTransacoes();
 
+            // Ajuste dos nomes para coincidir com o enum
             if (tipo == "Depósito")
-            {
                 tipo = "Deposito";
-            } 
             else if (tipo == "Transferência")
-            {
                 tipo = "Transferencia";
-            }
 
             var filtrado = transacoes
                 .Where(t =>
+                    // Filtrar pelo ID da transação
                     (idTransacao == null || t.Id == idTransacao) &&
-                    (contaRemetente == null || t.ContaRemetenteId == contaRemetente) &&
-                    (contaDestinatario == null || t.ContaDestinatarioId == contaDestinatario) &&
-                    (string.IsNullOrWhiteSpace(tipo) || tipo == "Todos" || t.Tipo.ToString().Contains(tipo, StringComparison.OrdinalIgnoreCase)) &&
+
+                    // 🔹 Filtrar por Número da Conta Remetente
+                    (contaRemetente == null ||
+                        (t.ContaRemetente != null &&
+                         t.ContaRemetente.NumeroConta == contaRemetente)) &&
+
+                    // 🔹 Filtrar por Número da Conta Destinatário
+                    (contaDestinatario == null ||
+                        (t.ContaDestinatario != null &&
+                         t.ContaDestinatario.NumeroConta == contaDestinatario)) &&
+
+                    // Tipo de transação
+                    (string.IsNullOrWhiteSpace(tipo) ||
+                     tipo == "Todos" ||
+                     t.Tipo.ToString().Contains(tipo, StringComparison.OrdinalIgnoreCase)) &&
+
+                    // Valor da transação
                     (
                         valor == null ||
                         (
@@ -89,6 +101,8 @@ namespace Projeto_UVV_Fintech.Repository
                             true
                         )
                     ) &&
+
+                    // Data da transação
                     (
                         dataTransacao == null ||
                         (
@@ -102,5 +116,7 @@ namespace Projeto_UVV_Fintech.Repository
 
             return filtrado;
         }
+
+
     }
 }

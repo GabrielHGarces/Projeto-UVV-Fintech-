@@ -202,7 +202,7 @@ namespace Projeto_UVV_Fintech.Controller
                 }
                 else if (tipoConta == "CP")
                 {
-                    conta = ContaCorrenteRepository.ObterContaPorNumero(numConta);
+                    conta = ContaPoupancaRepository.ObterContaPorNumero(numConta);
                 }
 
                 if (conta == null)
@@ -285,14 +285,15 @@ namespace Projeto_UVV_Fintech.Controller
         {
             try
             {
-                Conta? contaOrigem = null;
+                // Buscar conta de origem (corrigido para usar numContaOrigem)
+                Conta contaOrigem = null;
                 if (tipoContaOrigem == "CC")
                 {
-                    contaOrigem = ContaCorrenteRepository.ObterContaPorNumero(numContaOrigem); 
+                    contaOrigem = ContaCorrenteRepository.ObterContaPorNumero(numContaOrigem);
                 }
                 else if (tipoContaOrigem == "CP")
                 {
-                    contaOrigem = ContaPoupancaRepository.ObterContaPorNumero(numContaDestino); 
+                    contaOrigem = ContaPoupancaRepository.ObterContaPorNumero(numContaOrigem);
                 }
 
                 if (contaOrigem == null)
@@ -301,8 +302,12 @@ namespace Projeto_UVV_Fintech.Controller
                     return;
                 }
 
-                Conta? contaDestino = (Conta?)ContaCorrenteRepository.FiltrarContas(null, numContaDestino, null, null, null, null, null, null, null).FirstOrDefault()
-                                     ?? (Conta?)ContaPoupancaRepository.FiltrarContas(null, numContaDestino, null, null, null, null, null, null, null).FirstOrDefault();
+                // Buscar conta de destino — chama uma, se for null chama a outra
+                Conta contaDestino = ContaCorrenteRepository.ObterContaPorNumero(numContaDestino);
+                if (contaDestino == null)
+                {
+                    contaDestino = ContaPoupancaRepository.ObterContaPorNumero(numContaDestino);
+                }
 
                 if (contaDestino == null)
                 {
@@ -310,11 +315,11 @@ namespace Projeto_UVV_Fintech.Controller
                     return;
                 }
 
+                // Realizar transferência
                 bool sucesso = false;
                 if (tipoContaOrigem == "CC")
                 {
                     sucesso = ContaCorrenteRepository.TransferirCorrente(contaOrigem.Id, contaDestino.Id, valor);
-
                 }
                 else if (tipoContaOrigem == "CP")
                 {
@@ -335,6 +340,8 @@ namespace Projeto_UVV_Fintech.Controller
                 MessageBox.Show("Erro ao realizar transferência: " + ex.Message);
             }
         }
+
+
 
         public string GetNomeClientePorId(string idCliente)
         {
