@@ -25,37 +25,49 @@ O sistema foi projetado aplicando:
 
 A estrutura segue esse padrão principal:
 
-```bash
+```tree
 /
-├── Controllers/
-│   ├── ClienteController.cs
-│   ├── ContaController.cs
-│   └── TransacaoController.cs
+├── Projeto_UVV-Fintech/
+│   ├── Controllers/
+│   │   ├── ClienteController.cs
+│   │   ├── ContaController.cs
+│   │   └── TransacaoController.cs
+│   │
+│   ├── Repository/
+│   │   ├── ClienteRepository.cs
+│   │   ├── ContaCorrenteRepository.cs
+│   │   ├── ContaPoupancaRepository.cs
+│   │   ├── TransacaoRepository.cs
+│   │   └── Interfaces/
+│   │       ├── IClienteRepository.cs
+│   │       ├── IContaRepository.cs
+│   │       └── ITransacaoRepository.cs
+│   │
+│   ├── ViewModels/
+│   │   ├── ClienteViewModel.cs
+│   │   ├── ContaViewModel.cs
+│   │   └── TransacaoViewModel.cs
+│   │
+│   ├── Views/
+│   │   ├── (Arquivos XAML das telas do sistema)
+│   │   └── DialogWindows/
+│   │       └── (Arquivos XAML das janelas de diálogo)
+│   │
+│   └── Outros_arquivos_do_projeto...
 │
-├── Repository/
-│   ├── ClienteRepository.cs
-│   ├── ContaCorrenteRepository.cs
-│   ├── ContaPoupancaRepository.cs
-│   ├── TransacaoRepository.cs
-│   └── Interfaces/
-│       ├── IClienteRepository.cs
-│       ├── IContaRepository.cs
-│       └── ITransacaoRepository.cs
+├── Diagramas/
+│   ├── DiagramaCaseUso.excalidraw
+│   ├── DiagramaDeClasses.drawio
+│   ├── WireFrame.excalidraw
+│   │
+│   └── imagens/
+│       ├── DiagramaCaseUso.png
+│       ├── DiagramaDeClasses.jpg
+│       └── WireFrame.png
 │
-├── ViewModels/
-│   ├── ClienteViewModel.cs
-│   ├── ContaViewModel.cs
-│   └── TransacaoViewModel.cs
-│
-├── Views/
-│   └── (Arquivos XAML das telas do sistema)
-│
-├── DiagramaClasses.png
-├── DiagramaObjetos.png
-├── Wireframe.png
 └── README.md
-```
 
+```
 
 
 ---
@@ -98,28 +110,34 @@ A estrutura segue esse padrão principal:
 
 ## 🔗 **Links Importantes**
 
-### 📒 **Trello (Gerenciamento do Projeto)**  
-👉 *adicione aqui o link do Trello*  
+### 📒 Trello (Gerenciamento do Projeto)
+[Trello do Projeto](https://trello.com/b/AFnWRqPB/projeto-uvv-fintech)
 
-### 📘 **Diagrama de Classes**  
-Arquivo na raiz do projeto:  
-👉 *adicione aqui o link do arquivo ou imagem*  
+### 📘 Diagrama de Classes
+[Diagrama de Classes](Diagramas/Imagens/DiagramaDeClasses.jpg)
 
-### 📗 **Diagrama de Objetos**  
-Arquivo na raiz do projeto:  
-👉 *adicione aqui o link do arquivo ou imagem*  
+### 📗 Diagrama de Objetos
+[Diagrama de Objetos](Diagramas/Imagens/DiagramaCaseUso.png)
 
-### 🖼 **Wireframe das Telas**  
-Arquivo na raiz do projeto:  
-👉 *adicione aqui o link do arquivo ou imagem*  
+### 🖼 Wireframe das Telas
+[Wireframe](Diagramas/Imagens/Wireframe.png)
+
 
 ---
 
 ## ▶️ **Como Executar o Projeto**
 
-1. Abra o projeto no **Visual Studio**
-2. Restaure dependências (se necessário)
-3. Execute a solução
+(Caso não tenha o dotnet instalado) Rode: dotnet tool install --global dotnet-ef --version 9
+
+1. Clone o repositório:  
+   ```bash
+   git clone https://github.com/SEU-USUARIO/Projeto-UVV-Fintech.git
+2. Abra o projeto no **Visual Studio**
+3. Restaure dependências (se necessário)
+4. Crie o Banco:
+   ```bash
+   dotnet ef database update
+6. Execute a solução
 
 ---
 
